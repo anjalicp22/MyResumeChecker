@@ -1,0 +1,19 @@
+# Python
+ai_service/my_env/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# React/Node
+client/node_modules/
+node_modules/
+dist/
+build/
+
+# Environment
+.env
+
+# System files
+.DS_Store
+Thumbs.db
