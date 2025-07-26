@@ -1,143 +1,45 @@
-# MyResumeChecker
+# Welcome to MyResumeChecker 👋
+[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/anjalicp22/MyResumeChecker)
 
-A full-stack web application that analyzes resumes using AI and provides detailed feedback.  
-The project is built with **Python (Backend)**, **React (Frontend)**, and **Tailwind CSS** for a modern and responsive UI.
+> MyResumeChecker is a full-stack web application designed to help job seekers optimize their resumes for specific job applications. Users can upload their resumes and job descriptions, and the app automatically compares the skills and keywords in both to provide an AI-driven match score. In addition to resume analysis, users can create and manage tasks, helping them stay organized throughout their job search. With a modern, intuitive interface built using React and Tailwind, and a powerful Python backend for AI processing, MyResumeChecker streamlines the entire job application process.
 
----
+### 🏠 [Homepage](https://github.com/anjalicp22/MyResumeChecker)
 
-## 🚀 Features
+## Install
 
-- **AI-powered resume analysis** using NLP (Torch, etc.).
-- **Interactive UI** built with React and Tailwind.
-- **REST API backend** (Flask/Django/FastAPI – specify your backend framework).
-- **Real-time feedback** and scoring.
-- **Mobile responsive** and optimized.
-
----
-
-## 🛠 Tech Stack
-
-### **Frontend**
-
-- React
-- Tailwind CSS
-- PostCSS
-
-### **Backend**
-
-- Python (Flask/FastAPI/Django)
-- Torch / NLP libraries
-- REST API
-
-### **Other Tools**
-
-- Node.js & npm
-- Git & GitHub
-
----
-
-## 📂 Project Structure
-
+```sh
+For the backend (Python): pip install -r requirements.txt and For the frontend (React + Tailwind):npm install
 ```
 
-MyResumeChecker/
-│
-├── ai_service/ # Python backend (API + AI models)
-│ ├── my_env/ # (ignored in Git) Python virtual environment
-│ ├── app.py # Main backend app
-│ └── requirements.txt # Python dependencies
-│
-├── client/ # React frontend
-│ ├── src/ # React components and pages
-│ ├── tailwind.config.js
-│ └── package.json # Frontend dependencies
-│
-└── README.md
+## Usage
 
+```sh
+To run the application, first navigate to the backend folder using cd ai_service, activate the Python virtual environment with my_env\Scripts\activate, and start the FastAPI server using uvicorn main:app --reload --host 0.0.0.0 --port 8000 (backend runs on http://localhost:8000). Then, start the Node.js server by running cd server and node server.js. Finally, launch the React frontend by going to cd client and executing npm start (frontend runs on http://localhost:3000).
 ```
 
----
+## Run tests
 
-## ⚙️ Setup & Installation
-
-### **1. Clone the Repository**
-
-```bash
-git clone https://github.com/anjalicp22/MyResumeChecker.git
-cd MyResumeChecker
+```sh
+Backend (Python - pytest):pytest
 ```
 
----
+## Author
 
-### **2. Backend Setup (Python)**
+👤 **Anjali C**
 
-```bash
-cd ai_service
-python -m venv venv
-venv\Scripts\activate    # On Windows
-source venv/bin/activate # On Mac/Linux
-pip install -r requirements.txt
-```
-
-To start the backend:
-
-```bash
-python app.py
-```
-
----
-
-### **3. Frontend Setup (React + Tailwind)**
-
-```bash
-cd client
-npm install
-npm start
-```
-
----
-
-## 🌟 Scripts
-
-### **Frontend**
-
-- `npm start` – Runs the React app.
-- `npm run build` – Builds the frontend for production.
-
-### **Backend**
-
-- `python app.py` – Starts the Python API server.
-
----
-
-## 🔒 Environment Variables
-
-Create a `.env` file in both backend and frontend folders as needed:
-
-```
-# Example
-API_KEY=your_api_key
-```
-
----
+* Github: [@anjalicp22](https://github.com/anjalicp22)
+* LinkedIn: [@https:\/\/www.linkedin.com\/in\/anjali-c-306202215\/](https://linkedin.com/in/https:\/\/www.linkedin.com\/in\/anjali-c-306202215\/)
 
 ## 🤝 Contributing
 
-1. Fork this repository.
-2. Create a feature branch: `git checkout -b feature-name`.
-3. Commit your changes: `git commit -m "Add feature"`.
-4. Push to the branch: `git push origin feature-name`.
-5. Open a pull request.
+Contributions, issues and feature requests are welcome!
 
----
+Feel free to check [issues page](https://github.com/anjalicp22/MyResumeChecker/issues). 
 
-## 📜 License
+## Show your support
 
-This project is licensed under the **MIT License**.
+Give a ⭐️ if this project helped you!
 
----
 
-## 📧 Contact
-
-**Author:** Anjali
-**GitHub:** [anjalicp22](https://github.com/anjalicp22)
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
