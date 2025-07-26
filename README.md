@@ -1,45 +1,90 @@
-# Welcome to MyResumeChecker 👋
+# **Welcome to MyResumeChecker 👋**
+
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/anjalicp22/MyResumeChecker)
+[![Issues](https://img.shields.io/github/issues/anjalicp22/MyResumeChecker)](https://github.com/anjalicp22/MyResumeChecker/issues)
+[![Stars](https://img.shields.io/github/stars/anjalicp22/MyResumeChecker?style=social)](https://github.com/anjalicp22/MyResumeChecker)
 
-> MyResumeChecker is a full-stack web application designed to help job seekers optimize their resumes for specific job applications. Users can upload their resumes and job descriptions, and the app automatically compares the skills and keywords in both to provide an AI-driven match score. In addition to resume analysis, users can create and manage tasks, helping them stay organized throughout their job search. With a modern, intuitive interface built using React and Tailwind, and a powerful Python backend for AI processing, MyResumeChecker streamlines the entire job application process.
+---
 
-### 🏠 [Homepage](https://github.com/anjalicp22/MyResumeChecker)
+## **About the Project**
 
-## Install
+**MyResumeChecker** is a full-stack web application designed to help job seekers **optimize their resumes** for specific job descriptions.
 
-```sh
-For the backend (Python): pip install -r requirements.txt and For the frontend (React + Tailwind):npm install
+- Users can **upload resumes and job applications**, and the app compares **skills and keywords** to provide an **AI-driven match score**.
+- It also allows users to **create and manage tasks**, ensuring better job search organization.
+- Built with **React + Tailwind (frontend)** and a **Python FastAPI backend**, it offers a **modern UI** and **powerful AI processing** for accurate results.
+
+---
+
+### **🏠 [Project Homepage](https://github.com/anjalicp22/MyResumeChecker)**
+
+---
+
+## **Installation**
+
+```bash
+# Backend (Python)
+cd ai_service
+pip install -r requirements.txt
+
+# Frontend (React + Tailwind)
+cd client
+npm install
 ```
 
-## Usage
+---
 
-```sh
-To run the application, first navigate to the backend folder using cd ai_service, activate the Python virtual environment with my_env\Scripts\activate, and start the FastAPI server using uvicorn main:app --reload --host 0.0.0.0 --port 8000 (backend runs on http://localhost:8000). Then, start the Node.js server by running cd server and node server.js. Finally, launch the React frontend by going to cd client and executing npm start (frontend runs on http://localhost:3000).
+## **Usage**
+
+```bash
+# 1. Start the Backend (Python + FastAPI)
+cd ai_service
+my_env\Scripts\activate
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# 2. Start the Node Server
+cd server
+node server.js
+
+# 3. Start the Frontend (React)
+cd client
+npm start
 ```
 
-## Run tests
+- Backend runs on: **[http://localhost:8000](http://localhost:8000)**
+- Frontend runs on: **[http://localhost:3000](http://localhost:3000)**
 
-```sh
-Backend (Python - pytest):pytest
+---
+
+## **Run Tests**
+
+```bash
+# Backend (Python - pytest)
+pytest
 ```
 
-## Author
+---
+
+## **Author**
 
 👤 **Anjali C**
 
-* Github: [@anjalicp22](https://github.com/anjalicp22)
-* LinkedIn: [@https:\/\/www.linkedin.com\/in\/anjali-c-306202215\/](https://linkedin.com/in/https:\/\/www.linkedin.com\/in\/anjali-c-306202215\/)
+- **GitHub:** [@anjalicp22](https://github.com/anjalicp22)
+- **LinkedIn:** [Anjali C](https://www.linkedin.com/in/anjali-c-306202215/)
 
-## 🤝 Contributing
+---
 
-Contributions, issues and feature requests are welcome!
+## **🤝 Contributing**
 
-Feel free to check [issues page](https://github.com/anjalicp22/MyResumeChecker/issues). 
+Contributions, issues, and feature requests are welcome!
+Check out the [issues page](https://github.com/anjalicp22/MyResumeChecker/issues).
 
-## Show your support
+---
 
-Give a ⭐️ if this project helped you!
+## **Show Your Support**
 
+If you found this project helpful, give it a ⭐️ to show your support!
 
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+---
+
+_This README was generated and enhanced with ❤️ using [readme-md-generator](https://github.com/kefranabg/readme-md-generator)._
