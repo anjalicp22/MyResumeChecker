@@ -1,25 +1,56 @@
 # ai_service/app/utils/skill_match.py
 
-from sentence_transformers import SentenceTransformer, util
+import os
+from typing import List, Tuple
+import cohere
+import numpy as np
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+# You can override the model via env var if you want
+COHERE_MODEL = os.getenv("COHERE_EMBED_MODEL", "embed-english-v3.0")
 
-def semantic_match_skills(required_skills: list, resume_skills: list, threshold: float = 0.7) -> tuple:
-    """Semantic match using Sentence Transformers."""
+_api_key = os.getenv("COHERE_API_KEY")
+if not _api_key:
+    raise RuntimeError("COHERE_API_KEY is not set")
+
+co = cohere.Client(_api_key)
+
+def _embed(texts: List[str]) -> np.ndarray:
+    """
+    Returns a (n, d) float32 numpy array of embeddings.
+    """
+    resp = co.embed(texts=texts, model=COHERE_MODEL, input_type="search_document")
+    return np.asarray(resp.embeddings, dtype=np.float32)
+
+def _cosine_sim_matrix(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """
+    Cosine similarity between every row in a and every row in b.
+    """
+    a_norm = a / (np.linalg.norm(a, axis=1, keepdims=True) + 1e-9)
+    b_norm = b / (np.linalg.norm(b, axis=1, keepdims=True) + 1e-9)
+    return a_norm @ b_norm.T
+
+def semantic_match_skills(
+    required_skills: List[str],
+    resume_skills: List[str],
+    threshold: float = 0.7
+) -> Tuple[List[str], List[str]]:
+    """
+    Semantic match using Cohere embeddings. Returns (matched, missing).
+    """
     if not required_skills or not resume_skills:
-        return [], required_skills
+        return [], list(required_skills)
 
-    required_embeddings = model.encode(required_skills, convert_to_tensor=True)
-    resume_embeddings = model.encode(resume_skills, convert_to_tensor=True)
+    req_emb = _embed(required_skills)
+    res_emb = _embed(resume_skills)
 
-    matched = []
-    missing = []
+    sims = _cosine_sim_matrix(req_emb, res_emb)  # shape: [len(required), len(resume)]
 
-    for i, req_emb in enumerate(required_embeddings):
-        sims = util.pytorch_cos_sim(req_emb, resume_embeddings)[0]
-        if max(sims) >= threshold:
+    matched, missing = [], []
+    for i, row in enumerate(sims):
+        if float(row.max()) >= threshold:
             matched.append(required_skills[i])
         else:
             missing.append(required_skills[i])
 
+    # Ensure pure Python lists for safe JSON serialization
     return matched, missing
