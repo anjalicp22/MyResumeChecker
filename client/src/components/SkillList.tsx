@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getSkillsForResume } from '../services/skillService.ts';
-import { useAuth } from "../context/AuthContext.tsx";
+import { useAuth } from "../context/AuthContext";
 
 interface SkillListProps {
   resumeId: string;

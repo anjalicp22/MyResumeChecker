@@ -2,15 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import useTasks, { Task } from "../services/useTasks.ts";
-import api from "../services/api.ts";
-import { useAuth } from "../context/AuthContext.tsx";
+import useTasks, { Task } from "../services/useTasks";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { EventInput } from "@fullcalendar/core";
 import { toast } from "react-toastify";
-import Tooltip from "../components/Tooltip.tsx";
+import Tooltip from "../components/Tooltip";
 
 interface Application {
   _id: string;

@@ -1,14 +1,14 @@
 // client/src/pages/Resume.tsx
 import React, { useEffect, useState } from "react";
-import ResumeUpload from "../components/ResumeUpload.tsx";
-import api from "../services/api.ts";
-import { useAuth } from "../context/AuthContext.tsx";
-import { getResumes } from "../services/resumeService.ts";
+import ResumeUpload from "../components/ResumeUpload";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { getResumes } from "../services/resumeService";
 import { useNavigate } from "react-router-dom";
-import SkillList from "../components/SkillList.tsx";
-import { saveAnalyzedSkills } from "../services/skillService.ts";
+import SkillList from "../components/SkillList";
+import { saveAnalyzedSkills } from "../services/skillService";
 import { toast } from "react-toastify";
-import Tooltip from "../components/Tooltip.tsx";
+import Tooltip from "../components/Tooltip";
 
 interface Resume {
   _id: string;

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext.tsx';
+import { useAuth } from '../context/AuthContext';
 
 const PrivateNavbar = () => {
   const { user, logout } = useAuth();

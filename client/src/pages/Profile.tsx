@@ -1,6 +1,6 @@
 // client/src/pages/Profile.tsx
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext.tsx';
+import { useAuth } from '../context/AuthContext';
 import api from '../services/api.ts';
 import { toast } from 'react-toastify';
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { uploadResume } from "../services/resumeService.ts";
+import { uploadResume } from "../services/resumeService";
 import { toast } from "react-toastify";
 
 interface ResumeUploadProps {

@@ -1,10 +1,10 @@
 // src/pages/Login.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login as loginApi } from "../services/authService.ts";
-import { useAuth } from "../context/AuthContext.tsx";
+import { login as loginApi } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import Tooltip from "../components/Tooltip.tsx";
+import Tooltip from "../components/Tooltip";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");

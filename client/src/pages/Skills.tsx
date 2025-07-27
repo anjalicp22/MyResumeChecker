@@ -12,12 +12,12 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { useAuth } from "../context/AuthContext.tsx";
-import api from "../services/api.ts";
-import { getSkillsForResume, getSkillFrequency } from "../services/skillService.ts";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
+import { getSkillsForResume, getSkillFrequency } from "../services/skillService";
 import { toast } from "react-toastify";
-import { normalizeArray } from "../utils/skillnormalize.ts";
-import Tooltip from "../components/Tooltip.tsx";
+import { normalizeArray } from "../utils/skillnormalize";
+import Tooltip from "../components/Tooltip";
 
 type Resume = {
   _id: string;

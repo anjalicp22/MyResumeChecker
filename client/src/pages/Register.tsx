@@ -1,8 +1,8 @@
 // src/pages/Register.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { register as registerApi } from "../services/authService.ts";
-import { useAuth } from "../context/AuthContext.tsx";
+import { register as registerApi } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 
 const Register = () => {

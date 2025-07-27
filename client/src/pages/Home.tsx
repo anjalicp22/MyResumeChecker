@@ -1,7 +1,7 @@
 // src/pages/Home.tsx
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAuth } from "../context/AuthContext.tsx";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
   const { isAuthenticated, loading } = useAuth();  // <-- Must be inside component

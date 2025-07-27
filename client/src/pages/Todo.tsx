@@ -1,8 +1,8 @@
 // client\src\pages\Todo.tsx
 import React, { useState } from "react";
-import useTasks, { Task } from "../services/useTasks.ts";
+import useTasks, { Task } from "../services/useTasks";
 import { toast } from "react-toastify";
-import Tooltip from "../components/Tooltip.tsx";
+import Tooltip from "../components/Tooltip";
 
 const suggestedTasks = [
   "Update your resume",

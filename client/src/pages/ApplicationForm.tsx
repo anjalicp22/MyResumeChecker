@@ -1,13 +1,13 @@
 // client/src/pages/ApplicationForm.tsx
 import React, { useState, useEffect } from "react";
-import api from "../services/api.ts";
-import { useAuth } from "../context/AuthContext.tsx";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { getSkillsForResume } from "../services/skillService.ts";
-import { getMissingSkillsFuzzy, capitalize, scoreResumeSkills } from "../utils/skillUtils.ts";
+import { getSkillsForResume } from "../services/skillService";
+import { getMissingSkillsFuzzy, capitalize, scoreResumeSkills } from "../utils/skillUtils";
 import stringSimilarity from "string-similarity";
 import { toast } from "react-toastify";
-import Tooltip from "../components/Tooltip.tsx";
+import Tooltip from "../components/Tooltip";
 
 // Utility for consistent error logging
 const logError = (context: string, err: unknown) =>

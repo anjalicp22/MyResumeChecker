@@ -1,21 +1,21 @@
 // src/App.tsx
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useAuth } from './context/AuthContext.tsx';
+import { useAuth } from './context/AuthContext';
 
-import Navbar from './components/Navbar.tsx';
-import ProtectedRoute from './routes/ProtectedRoute.tsx';
-import ErrorBoundary from './routes/ErrorBoundary.tsx';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './routes/ProtectedRoute';
+import ErrorBoundary from './routes/ErrorBoundary';
 
-import Home from './pages/Home.tsx';
-import Dashboard from './pages/Dashboard.tsx';
-import Login from './pages/Login.tsx';
-import Register from './pages/Register.tsx';
-import Resume from './pages/Resume.tsx';
-import Skills from './pages/Skills.tsx';
-import Applications from './pages/ApplicationForm.tsx';
-import Profile from './pages/Profile.tsx';
-import TodoPage from './pages/Todo.tsx';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Resume from './pages/Resume';
+import Skills from './pages/Skills';
+import Applications from './pages/ApplicationForm';
+import Profile from './pages/Profile';
+import TodoPage from './pages/Todo';
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

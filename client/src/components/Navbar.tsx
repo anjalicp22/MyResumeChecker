@@ -1,7 +1,7 @@
 // src/components/Navbar.tsx
-import { useAuth } from '../context/AuthContext.tsx';
-import PublicNavbar from './PublicNavbar.tsx';
-import PrivateNavbar from './PrivateNavbar.tsx';
+import { useAuth } from '../context/AuthContext';
+import PublicNavbar from './PublicNavbar';
+import PrivateNavbar from './PrivateNavbar';
 
 const Navbar = () => {
   const { isAuthenticated, loading } = useAuth();
