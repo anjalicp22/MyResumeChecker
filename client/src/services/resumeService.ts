@@ -1,5 +1,5 @@
 //services/resumeService.ts
-import api from './api.ts';
+import api from './api';
 
 export const uploadResume = (formData: FormData) =>
   api.post('/api/resume', formData, {

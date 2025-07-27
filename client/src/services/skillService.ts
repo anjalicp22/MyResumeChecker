@@ -1,5 +1,5 @@
 // client/src/services/skillService.ts
-import api from './api.ts';
+import api from './api';
 
 export const getSkills = (token: string) =>
   api.get('/api/skills', {

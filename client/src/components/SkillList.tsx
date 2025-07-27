@@ -1,7 +1,7 @@
 //client\src\components\SkillList.tsx
 
 import React, { useEffect, useState } from 'react';
-import { getSkillsForResume } from '../services/skillService.ts';
+import { getSkillsForResume } from '../services/skillService';
 import { useAuth } from "../context/AuthContext";
 
 interface SkillListProps {

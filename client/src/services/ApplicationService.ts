@@ -1,6 +1,6 @@
 // client\src\services\ApplicationService.ts
 
-import api from './api.ts';
+import api from './api';
 
 // Create new job application
 export const createApplication = (data: any, token: string) =>
