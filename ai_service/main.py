@@ -6,16 +6,20 @@ from app.routes.extract_skills import router as extract_skills_router
 
 app = FastAPI(title="AI Resume Skill Predictor")
 
-# Allow frontend (React)
+origins = [
+    "http://localhost:3000",
+    "https://myresumechecker.onrender.com"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,           
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],              
+    allow_headers=["*"],             
 )
 
-# Mount all API routes
+
 app.include_router(predict_router)
 app.include_router(analyze_resume_file_router)
 app.include_router(extract_skills_router)
