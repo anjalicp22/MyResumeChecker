@@ -26,7 +26,7 @@ def test_resume_analysis():
     dummy_jd = "Looking for a backend engineer skilled in Python, Django, PostgreSQL, and Docker."
     
     result = analyze_resume_against_jd(dummy_resume, dummy_jd)
-    print("🔍 Suggested Skills:")
+    print(" Suggested Skills:")
     for skill in result:
         print("•", skill)
 

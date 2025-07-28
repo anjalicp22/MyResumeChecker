@@ -50,7 +50,7 @@ const saveAnalyzedSkills = async (req, res) => {
     return res.status(400).json({ message: "Missing resumeId or skills." });
   }
 
-  console.log("🧠 [saveAnalyzedSkills] existing:", existing_skills);
+  console.log(" [saveAnalyzedSkills] existing:", existing_skills);
   console.log("🔮 [saveAnalyzedSkills] suggested:", suggested_skills);
 
   const normExisting = normalizeArray(existing_skills);
@@ -115,7 +115,7 @@ const getSkillFrequencyAgg = async (req, res) => {
 // (Optional) 🔎 Compute the gap server-side
 const gapAnalysis = async (req, res) => {
   const { resumeId, applicationId } = req.query;
-  console.log("🧠 [GET] /api/skills/gap", { resumeId, applicationId });
+  console.log(" [GET] /api/skills/gap", { resumeId, applicationId });
 
   if (!resumeId || !applicationId)
     return res

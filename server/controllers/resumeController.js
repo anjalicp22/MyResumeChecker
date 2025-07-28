@@ -22,7 +22,7 @@ const uploadResume = async (req, res) => {
 
     await resume.save();
 
-    // 🧠 CALL PYTHON SKILL EXTRACTOR
+    //  CALL PYTHON SKILL EXTRACTOR
     const resumeFullPath = path.join(
       __dirname,
       "..",
@@ -56,7 +56,7 @@ const uploadResume = async (req, res) => {
           console.error("JSON parse error:", jsonErr);
           return res.status(500).json({ message: "Skill parsing failed" });
         }
-        // 🧠 Save skills to MongoDB
+        //  Save skills to MongoDB
         await Skill.create({
           user: req.user._id,
           source: "resume",

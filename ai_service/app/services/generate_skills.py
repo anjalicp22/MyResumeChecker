@@ -1,4 +1,4 @@
-# ai_service\app\services\generate_skills.py
+# ai_service/app/services/generate_skills.py
 import os
 import cohere
 import json
@@ -25,5 +25,8 @@ def generate_skill_suggestions(resume_text: str, job_description: str) -> list:
         temperature=0.5
     )
 
-    lines = resp.generations[0].text.strip().splitlines()
-    return [line.strip("-• ") for line in lines if line.strip()]
+    lines = [line.strip("-\u2022 ") for line in resp.generations[0].text.strip().splitlines() if line.strip()]
+    lines = list(set(lines))
+
+    print(" Missing Skills Suggested by AI:", lines)
+    return lines

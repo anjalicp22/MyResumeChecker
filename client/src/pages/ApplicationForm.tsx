@@ -150,7 +150,7 @@ const ApplicationForm: React.FC = () => {
 
   // Validate required fields
   const validateForm = () => {
-    console.log("🔍 Validating form...");
+    console.log(" Validating form...");
     const errs: Record<string, string> = {};
     if (!formData.title.trim()) errs.title = "Job title is required.";
     if (!formData.jobDescription.trim()) errs.jobDescription = "Job description is required.";
@@ -174,7 +174,7 @@ const ApplicationForm: React.FC = () => {
 
   // Analyze job description
   const doAnalysis = async (desc: string, skills: string[]): Promise<AnalysisResult> => {
-    console.log("🔍 Running job description analysis...");
+    console.log(" Running job description analysis...");
     const resp = await fetch(`${process.env.REACT_APP_AI_URL}/extract-skills`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -193,7 +193,7 @@ const ApplicationForm: React.FC = () => {
 
   // Handle analyze click
   const handleAnalyze = async () => {
-    console.log("🔍 Analyze button clicked.");
+    console.log(" Analyze button clicked.");
     const errs = validateForm();
     if (Object.keys(errs).length) {
       setErrors(errs);
@@ -274,10 +274,10 @@ const ApplicationForm: React.FC = () => {
     }
   };
 
-  // 🧠 Recommend best resume
+  //  Recommend best resume
   const handleRecommend = async () => {
     if (!analysis) return;
-    console.log("🔍 Recommending best resume...");
+    console.log(" Recommending best resume...");
     setRecommending(true);
     setRecommendResult(null);
 
@@ -346,7 +346,7 @@ const ApplicationForm: React.FC = () => {
     );
 
   const toggleMoreDetails = (id: string) => {
-    console.log(`🔍 Toggling details for application ${id}`);
+    console.log(` Toggling details for application ${id}`);
     setShowAllDetailsMap(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
@@ -627,7 +627,7 @@ const ApplicationForm: React.FC = () => {
       {/* Search input */}
       <input
         type="text"
-        placeholder="🔍 Search saved applications..."
+        placeholder=" Search saved applications..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mt-4 w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 ring-indigo-400 text-sm shadow"

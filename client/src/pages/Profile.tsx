@@ -124,7 +124,7 @@ const Profile: React.FC = () => {
             </label>
             <div className="relative w-28 h-28">
               <img
-                src={previewUrl || '/default-avatar.jpg'}
+                src={previewUrl || '/cv.png'}
                 alt="Profile Preview"
                 className="w-full h-full object-cover rounded-full border border-gray-300 shadow-md transition hover:scale-105 hover:brightness-110"
               />
