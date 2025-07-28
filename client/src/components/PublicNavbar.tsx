@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const PublicNavbar = () => (
   <nav className="bg-white shadow-md py-4 px-6 flex justify-between items-center rounded-xl">
     <h1 className="font-bold text-2xl text-indigo-600 cursor-pointer pr-6">
-      <Link to="/">JobTracker</Link>
+      <Link to="/">MyResumeChecker</Link>
     </h1>
 
     <div className="flex items-center space-x-6 text-gray-700 font-semibold">
