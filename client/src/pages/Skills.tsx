@@ -254,7 +254,7 @@ const Skills: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h4 className="font-semibold text-green-700 mb-2 flex items-center gap-2">
-                ✅ Existing Skills
+                 Existing Skills
                 <Tooltip content="Skills already present in your resume.">
                   <span className="w-4 h-4 text-xs bg-green-700 text-white rounded-full inline-flex justify-center items-center cursor-default">?</span>
                 </Tooltip>

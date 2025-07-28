@@ -1,8 +1,8 @@
-//app.js
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const path = require("path");
+
+const app = express();
 
 // Route files
 const authRoutes = require("./routes/authRoutes.js");
@@ -13,25 +13,39 @@ const taskRoutes = require("./routes/taskRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 const errorHandler = require("./middleware/errorHandler.js");
 
-// Enable CORS
+//  Allowed origins (local + Render frontend)
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://myresumechecker.onrender.com",
+];
+
+//  Enable CORS
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: function (origin, callback) {
+      // allow requests with no origin (like curl or Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
 app.options("*", cors());
 
-// Parse incoming requests
+//  Parse incoming JSON & URL-encoded form data
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Handles form-data (except file uploads)
+app.use(express.urlencoded({ extended: true }));
 
-// Serve static files for profile pictures
+//  Serve static files (profile pics, etc.)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 console.log("Serving static files from:", path.join(__dirname, "uploads"));
 
-// Mount API routes *after* middleware is in place
+//  Mount API routes
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/applications", applicationRoutes);
@@ -39,12 +53,12 @@ app.use("/api/resume", resumeRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// Root test
+//  Test root
 app.get("/", (req, res) => {
   res.send("Express server is working");
 });
 
-// Error handler
+//  Global error handler
 app.use(errorHandler);
 
 module.exports = app;

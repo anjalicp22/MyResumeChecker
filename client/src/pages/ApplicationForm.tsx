@@ -102,8 +102,8 @@ const ApplicationForm: React.FC = () => {
           api.get("/api/applications", { headers: { Authorization: `Bearer ${token}` } }),
           api.get("/api/resume", { headers: { Authorization: `Bearer ${token}` } }),
         ]);
-        console.log("✅ Applications fetched:", appsRes.data);
-        console.log("✅ Resumes fetched:", resumesRes.data);
+        console.log(" Applications fetched:", appsRes.data);
+        console.log(" Resumes fetched:", resumesRes.data);
         setApplications(appsRes.data);
         setResumes(resumesRes.data);
         if (resumesRes.data.length) {
@@ -128,7 +128,7 @@ const ApplicationForm: React.FC = () => {
       try {
         if (selectedResumeId !== "None") {
           const resp = await getSkillsForResume(selectedResumeId, token!);
-          console.log(`✅ Skills for resume ${selectedResumeId}:`, resp.data);
+          console.log(` Skills for resume ${selectedResumeId}:`, resp.data);
           setResumeSkills(resp.data?.[0]?.skills || []);
         }
       } catch (err) {
@@ -166,7 +166,7 @@ const ApplicationForm: React.FC = () => {
       console.warn("⚠️ Validation errors:", errs);
       toast.warn("Please fix the highlighted errors.");
     } else {
-      console.log("✅ Validation passed.");
+      console.log(" Validation passed.");
     }
 
     return errs;
@@ -202,7 +202,7 @@ const ApplicationForm: React.FC = () => {
     try {
       setSubmitting(true);
       const result = await doAnalysis(formData.jobDescription, resumeSkills);
-      console.log("✅ Analysis completed:", result);
+      console.log(" Analysis completed:", result);
       toast.success("Analysis completed successfully.");
       setAnalysis(result);
     } catch (err) {
@@ -231,7 +231,7 @@ const ApplicationForm: React.FC = () => {
       console.log("📦 Payload:", payload);
       await api.post("/api/applications", payload, { headers: { Authorization: `Bearer ${token}` } });
       toast.success("Application saved.");
-      console.log("✅ Application saved.");
+      console.log(" Application saved.");
       setFormData(defaultForm);
       setAnalysis(null);
       const res = await api.get("/api/applications", { headers: { Authorization: `Bearer ${token}` } });
@@ -253,7 +253,7 @@ const ApplicationForm: React.FC = () => {
       await api.delete(`/api/applications/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       toast.success("Application deleted.");
       setApplications(prev => prev.filter(a => a._id !== id));
-      console.log(`✅ Application ${id} deleted.`);
+      console.log(` Application ${id} deleted.`);
     } catch (err) {
       logError("handleDelete", err);
       toast.error("Delete failed.");
@@ -266,7 +266,7 @@ const ApplicationForm: React.FC = () => {
       await api.put(`/api/applications/${id}`, { status: newStatus }, { headers: { Authorization: `Bearer ${token}` } });
       toast.success(`Status updated to ${newStatus}`);
       setApplications(prev => prev.map(a => (a._id === id ? { ...a, status: newStatus } : a)));
-      console.log(`✅ Status for ${id} updated to ${newStatus}`);
+      console.log(` Status for ${id} updated to ${newStatus}`);
     } catch (err) {
       logError("handleStatusUpdate", err);
       toast.error("Failed to update status.");

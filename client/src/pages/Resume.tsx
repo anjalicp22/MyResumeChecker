@@ -257,7 +257,7 @@ const Resume = () => {
 
                   {analysisResults[_id] && (
                     <div className="mt-4 p-4 bg-white rounded-lg border text-sm">
-                      <p className="font-semibold text-indigo-800">✅ Skills Found:</p>
+                      <p className="font-semibold text-indigo-800"> Skills Found:</p>
                       <p className="text-gray-700 mb-2">
                         {analysisResults[_id].existing_skills.length
                           ? analysisResults[_id].existing_skills.join(", ")

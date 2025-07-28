@@ -28,7 +28,7 @@ const Register = () => {
 
     try {
       const res = await registerApi({ name, email, password });
-      console.log("✅ Registration successful", res.data);
+      console.log(" Registration successful", res.data);
 
       toast.success("Registration successful! Please log in.");
       navigate("/login");
