@@ -17,7 +17,7 @@ const useTasks = () => {
     }
     (async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/tasks", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch tasks");
@@ -32,7 +32,7 @@ const useTasks = () => {
   const addTask = async (text: string) => {
     if (!text.trim() || !token) return;
     try {
-      const res = await fetch("http://localhost:5000/api/tasks", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const useTasks = () => {
     const task = tasks.find((t) => t._id === id);
     if (!task) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`, {
         method: "PUT", // <-- changed from PATCH to PUT
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +73,7 @@ const useTasks = () => {
   const deleteTask = async (id: string) => {
     if (!token) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

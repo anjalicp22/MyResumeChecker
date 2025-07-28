@@ -104,17 +104,18 @@ const Dashboard: React.FC = () => {
     toast.success(`Task added: "${t}"`);
     setNewTask("");
   };
+  // `${process.env.REACT_APP_API_URL}${path}`
 
   const handleAnalyze = async (resumePath: string, resumeId: string) => {
     toast.info("Analyzing resume…");
     try {
       const fname = resumePath.split("/").pop()!;
-      const res = await fetch(`http://localhost:5000/uploads/resume/${fname}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/uploads/resume/${fname}`);
       const blob = await res.blob();
       const fd = new FormData();
       fd.append("file", blob, fname);
 
-      const ai = await fetch("http://localhost:8000/analyze-resume-file", {
+      const ai = await fetch(`${process.env.REACT_APP_AI_URL}/analyze-resume-file`, {
         method: "POST",
         body: fd,
       });
@@ -255,7 +256,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="flex gap-3">
                     <Tooltip content="View resume in new tab">
-                      <a href={`http://localhost:5000${path}`} target="_blank" rel="noreferrer"
+                      <a href={`${process.env.REACT_APP_API_URL}${path}`} target="_blank" rel="noreferrer"
                          className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium hover:bg-indigo-200 transition">
                         View
                       </a>

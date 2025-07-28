@@ -175,7 +175,7 @@ const ApplicationForm: React.FC = () => {
   // Analyze job description
   const doAnalysis = async (desc: string, skills: string[]): Promise<AnalysisResult> => {
     console.log("🔍 Running job description analysis...");
-    const resp = await fetch("http://localhost:8000/extract-skills", {
+    const resp = await fetch(`${process.env.REACT_APP_AI_URL}/extract-skills`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ job_description: desc }),

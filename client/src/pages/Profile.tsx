@@ -37,7 +37,7 @@ const Profile: React.FC = () => {
 
         setPreviewUrl(
           user.profilePicture
-            ? `http://localhost:5000${user.profilePicture}`
+            ? `${process.env.REACT_APP_API_URL}${user.profilePicture}`
             : null
         );
       } catch (err) {
@@ -94,7 +94,7 @@ const Profile: React.FC = () => {
 
       setPreviewUrl(
         updatedUser.profilePicture
-          ? `http://localhost:5000${updatedUser.profilePicture}`
+          ? `${process.env.REACT_APP_API_URL}${updatedUser.profilePicture}`
           : null
       );
     } catch (err) {

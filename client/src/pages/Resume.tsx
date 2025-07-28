@@ -90,7 +90,7 @@ const Resume = () => {
     try {
       const fileName = resumePath.split("/").pop();
       console.log("[Resume] Fetching resume file:", fileName);
-      const response = await fetch(`http://localhost:5000/uploads/resume/${fileName}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/uploads/resume/${fileName}`);
       const blob = await response.blob();
 
       if (!response.ok) {
@@ -101,7 +101,7 @@ const Resume = () => {
       const formData = new FormData();
       formData.append("file", blob, fileName);
 
-      const aiRes = await fetch("http://localhost:8000/analyze-resume-file", {
+      const aiRes = await fetch(`${process.env.REACT_APP_AI_URL}/analyze-resume-file`, {
         method: "POST",
         body: formData,
       });
@@ -133,7 +133,7 @@ const Resume = () => {
     }
   };
 
-  const baseURL = "http://localhost:5000/";
+  const baseURL = "${process.env.REACT_APP_API_URL}/";
   const normalizeURL = (base: string, p: string) => base.replace(/\/$/, "") + p;
 
   return (
@@ -195,7 +195,7 @@ const Resume = () => {
                     <div className="flex items-center gap-3 flex-wrap">
                       <Tooltip content="View resume in new tab">
                         <a
-                          href={`http://localhost:5000${path}`}
+                          href={`${process.env.REACT_APP_API_URL}${path}`}
                           target="_blank"
                           rel="noreferrer"
                           className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium hover:bg-indigo-200 transition"

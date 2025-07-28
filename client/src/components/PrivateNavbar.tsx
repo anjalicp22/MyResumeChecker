@@ -14,7 +14,7 @@ const PrivateNavbar = () => {
     console.log("👤 [PrivateNavbar] User object:", user);
     if (user?.profilePicture) {
       console.log("🖼️ [PrivateNavbar] Profile picture path from context:", user.profilePicture);
-      console.log("🌐 [PrivateNavbar] Full image URL:", `http://localhost:5000${user.profilePicture}?t=${Date.now()}`);
+      console.log("🌐 [PrivateNavbar] Full image URL:", `${process.env.REACT_APP_API_URL}${user.profilePicture}?t=${Date.now()}`);
     } else {
       console.log("🧍 [PrivateNavbar] No profile picture, default avatar used.");
     }
@@ -39,7 +39,7 @@ const PrivateNavbar = () => {
   };
 
   const profileImageUrl = user?.profilePicture
-    ? `http://localhost:5000${user.profilePicture}?t=${Date.now()}`
+    ? `${process.env.REACT_APP_API_URL}${user.profilePicture}?t=${Date.now()}`
     : '/default-avatar.jpg';
 
   return (
