@@ -9,14 +9,14 @@ co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 def extract_required_skills(jd_text: str) -> list:
     prompt = f"""
-You are an AI recruiter.
+    Given the following job description:
+    \"\"\"{job_description}\"\"\"
 
-Given this job description:
+    Extract a list of technical and soft skills required for this job. Do NOT infer unrelated skills. Just extract what's asked.
 
-\"\"\"{jd_text}\"\"\"
-
-Extract only the most relevant SKILLS required for this role. Give accurate skills. Return them as a comma-separated list.
-"""
+    Respond as:
+    ["skill1", "skill2", ...]
+    """
     resp = co.generate(
         model="command-r-plus",
         prompt=prompt,
