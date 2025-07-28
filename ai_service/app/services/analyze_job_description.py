@@ -9,20 +9,21 @@ co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 def extract_required_skills(jd_text: str) -> list:
     prompt = f"""
-You are an AI assistant. Given the following JOB DESCRIPTION text:
+You are an AI recruiter.
 
-\"\"\" {jd_text} \"\"\"
+Given this job description:
 
-Extract all required technical and key professional skills, and output them as a comma-separated list.
+\"\"\"{jd_text}\"\"\"
+
+Extract only the most relevant SKILLS required for this role. Give accurate skills. Return them as a comma-separated list.
 """
     resp = co.generate(
         model="command-r-plus",
         prompt=prompt,
-        max_tokens=150,
+        max_tokens=200,
         temperature=0.3
     )
 
     text = resp.generations[0].text.strip()
-    # Split by comma or newline, trim
-    parts = re.split(r"[,\n]", text)
-    return [p.strip() for p in parts if p.strip()]
+    skills = re.split(r"[,\n]", text)
+    return [s.strip() for s in skills if s.strip()]

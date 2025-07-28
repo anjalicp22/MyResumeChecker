@@ -318,7 +318,7 @@ const Skills: React.FC = () => {
             </div>
             <div>
               <h4 className="font-semibold text-red-700 mb-2 flex items-center gap-2">
-                ❌ Missing Skills
+                Missing Skills
                 <Tooltip content="Skills that are required by the job but missing in your resume.">
                   <span className="w-4 h-4 text-xs bg-red-700 text-white rounded-full inline-flex justify-center items-center cursor-default">?</span>
                 </Tooltip>

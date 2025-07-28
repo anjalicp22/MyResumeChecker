@@ -7,5 +7,5 @@ resume = ["React.js", "version control using GitHub", "HTML", "Python", "Agile"]
 
 matched, missing = semantic_match_skills(required, resume)
 
-print("Matched Skills ✅:", matched)
-print("Missing Skills ❌:", missing)
+print("Matched Skills :", matched)
+print("Missing Skills :", missing)

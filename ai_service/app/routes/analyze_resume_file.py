@@ -25,10 +25,10 @@ async def analyze_resume_file(file: UploadFile = File(...)):
 
         matched, missing = semantic_match_skills(REQUIRED_SKILLS, resume_skills)
 
-        print("✅ Existing Resume Skills:", resume_skills)
+        print("Existing Resume Skills:", resume_skills)
         print("✨ Suggested Additional Skills:", suggested_skills)
-        print("✅ Matched Required Skills:", matched)
-        print("❌ Missing Required Skills:", missing)
+        print("Matched Required Skills:", matched)
+        print("Missing Required Skills:", missing)
 
         return {
             "existing_skills": resume_skills,
