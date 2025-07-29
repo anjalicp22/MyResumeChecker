@@ -174,14 +174,16 @@ const ApplicationForm: React.FC = () => {
 
   // Analyze job description
   const doAnalysis = async (desc: string, skills: string[]): Promise<AnalysisResult> => {
-    console.log(" Running job description analysis...");
-    const resp = await fetch(`${process.env.REACT_APP_AI_URL}/extract-skills`, {
+    console.log("Running job description analysis...");
+    const resp = await fetch(`${process.env.REACT_APP_AI_URL}/analyze_job_description`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ job_description: desc }),
     });
+
     const json = await resp.json();
-    console.log("📊 Analysis response:", json);
+    console.log("AI JD Analysis response:", json);
+
     if (!json.required_skills) throw new Error("No skills extracted");
 
     const missing = getMissingSkillsFuzzy(json.required_skills, skills);
@@ -190,6 +192,7 @@ const ApplicationForm: React.FC = () => {
       missing_skills: missing.map(capitalize),
     };
   };
+
 
   // Handle analyze click
   const handleAnalyze = async () => {

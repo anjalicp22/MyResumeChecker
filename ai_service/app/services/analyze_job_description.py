@@ -7,10 +7,16 @@ from dotenv import load_dotenv
 load_dotenv()
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
-def extract_required_skills(jd_text: str) -> list:
+router = APIRouter()
+
+class JDInput(BaseModel):
+    job_description: str
+
+@router.post("/analyze_job_description")
+async def extract_required_skills(jd_text: str) -> list:
     prompt = f"""
     Given the following job description:
-    \"\"\"{job_description}\"\"\"
+    \"\"\"{jd_text}\"\"\"
 
     Extract a list of technical and soft skills required for this job. Do NOT infer unrelated skills. Just extract what's asked.
 
