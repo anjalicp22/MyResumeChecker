@@ -15,7 +15,9 @@ class JDInput(BaseModel):
     job_description: str
 
 @router.post("/analyze_job_description")
-async def extract_required_skills(jd_text: str) -> list:
+async def extract_required_skills(input: JDInput) -> list:
+    jd_text = input.job_description
+
     prompt = f"""
     Given the following job description:
     \"\"\"{jd_text}\"\"\"
