@@ -40,7 +40,7 @@ const PrivateNavbar = () => {
 
   const profileImageUrl = user?.profilePicture
     ? `${process.env.REACT_APP_API_URL}${user.profilePicture}?t=${Date.now()}`
-    : '/cv.png';
+    : '/default-avatar.jpg'; 
 
   return (
     <nav className="bg-white shadow-md py-4 px-6 flex justify-between items-center rounded-xl">
