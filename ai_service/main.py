@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.predict import router as predict_router
 from app.routes.analyze_resume_file import router as analyze_resume_file_router
 from app.routes.extract_skills import router as extract_skills_router
-from app.routes.analyze_job_description import router as analyze_jd_router
+from app.services.analyze_job_description import router as analyze_jd_router
 
 app = FastAPI(title="AI Resume Skill Predictor")
 
