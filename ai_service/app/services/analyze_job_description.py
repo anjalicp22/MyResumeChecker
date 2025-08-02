@@ -3,6 +3,8 @@ import os
 import cohere
 import re
 from dotenv import load_dotenv
+from fastapi import APIRouter
+from pydantic import BaseModel
 
 load_dotenv()
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
