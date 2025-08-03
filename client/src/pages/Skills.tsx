@@ -169,7 +169,7 @@ const Skills: React.FC = () => {
 
   return (
     <div className="min-h-screen py-10 px-4">
-      <div className="max-w-[1100px] mx-auto w-full space-y-8">
+      <div className="max-w-[1100px] mx-auto w-full px-4 sm:px-6 space-y-8">
         <h2 className="text-3xl font-bold text-indigo-800 flex items-center gap-2">
           Skills
           <Tooltip content="Compare your resume with job skill requirements">
@@ -185,7 +185,8 @@ const Skills: React.FC = () => {
               <span className="w-5 h-5 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">?</span>
             </Tooltip>
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
+
             <div>
               <h4 className="font-medium text-gray-700 mb-2">📄 Your Resumes</h4>
               <div className="h-64 overflow-y-auto space-y-3 pr-2">
@@ -251,7 +252,8 @@ const Skills: React.FC = () => {
        {/* Resume Skills */}
         <section className="bg-white p-6 rounded-2xl shadow-md">
           <h3 className="text-lg font-semibold mb-4 text-indigo-700">📄 Resume Skills</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
+
             <div>
               <h4 className="font-semibold text-green-700 mb-2 flex items-center gap-2">
                  Existing Skills
@@ -296,7 +298,8 @@ const Skills: React.FC = () => {
         {/* Application Skills */}
         <section className="bg-white p-6 rounded-2xl shadow-md">
           <h3 className="text-lg font-semibold mb-4 text-indigo-700">🏢 Application Skills</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
+
             <div>
               <h4 className="font-semibold text-blue-700 mb-2 flex items-center gap-2">
                 📌 Required Skills
@@ -339,7 +342,7 @@ const Skills: React.FC = () => {
         </section>
 
         {/* Charts */}
-        <section className="grid md:grid-cols-2 gap-6">
+        <section className="flex flex-col md:grid md:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <h3 className="text-lg font-semibold mb-4 text-indigo-700 flex items-center gap-2">
               🎯 Match vs Missing (%)

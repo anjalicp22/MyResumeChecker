@@ -17,28 +17,20 @@ interface Resume {
   path: string;
 }
 
-interface AnalysisResult {
-  existing_skills: string[];
-  suggested_skills: string[];
-}
-
 const Resume = () => {
   const { token } = useAuth();
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [analysisResults, setAnalysisResults] = useState<Record<string, AnalysisResult>>({});
   const [analyzing, setAnalyzing] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
 
   const fetchResumes = async () => {
     if (!token) return;
-    console.log("[Resume] Fetching resumes...");
     setLoading(true);
     setError(null);
     try {
       const res = await getResumes(token);
-      console.log("[Resume] Fetched resumes:", res.data);
       setResumes(res.data);
     } catch (err) {
       console.error("[Resume] Failed to load resumes:", err);
@@ -56,26 +48,13 @@ const Resume = () => {
       return;
     }
     fetchResumes();
-
-    const savedAnalysis = localStorage.getItem("analysisResults");
-    if (savedAnalysis) {
-      console.log("[Resume] Loaded saved analysis results from localStorage.");
-      setAnalysisResults(JSON.parse(savedAnalysis));
-    }
   }, [token]);
 
   const handleDelete = async (id: string) => {
-    console.log(`[Resume] Deleting resume with ID: ${id}`);
     if (!window.confirm("Are you sure you want to delete this resume?")) return;
     try {
       await api.delete(`/api/resume/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       setResumes((prev) => prev.filter((r) => r._id !== id));
-
-      const updatedAnalysis = { ...analysisResults };
-      delete updatedAnalysis[id];
-      setAnalysisResults(updatedAnalysis);
-      localStorage.setItem("analysisResults", JSON.stringify(updatedAnalysis));
-
       toast.success("Resume deleted successfully.");
     } catch (err) {
       console.error("[Resume] Failed to delete resume:", err);
@@ -84,12 +63,10 @@ const Resume = () => {
   };
 
   const handleAnalyze = async (resumePath: string, resumeId: string) => {
-    console.log(`[Resume] Analyzing resume with ID: ${resumeId}`);
     setAnalyzing((prev) => ({ ...prev, [resumeId]: true }));
 
     try {
       const fileName = resumePath.split("/").pop();
-      console.log("[Resume] Fetching resume file:", fileName);
       const response = await fetch(`${process.env.REACT_APP_API_URL}/uploads/resume/${fileName}`);
       const blob = await response.blob();
 
@@ -107,7 +84,6 @@ const Resume = () => {
       });
 
       const result = await aiRes.json();
-      console.log("[Resume] AI Analysis result:", result);
 
       if (result.existing_skills && result.suggested_skills) {
         await saveAnalyzedSkills(
@@ -115,14 +91,9 @@ const Resume = () => {
           token!
         );
 
-        const updatedResults = { ...analysisResults, [resumeId]: result };
-        setAnalysisResults(updatedResults);
-        localStorage.setItem("analysisResults", JSON.stringify(updatedResults));
-
         await fetchResumes();
         toast.success("Resume analyzed and skills saved.");
       } else {
-        console.error("[Resume] Invalid AI response format:", result);
         toast.error("Unexpected AI response format.");
       }
     } catch (err) {
@@ -133,17 +104,13 @@ const Resume = () => {
     }
   };
 
-  const baseURL = "${process.env.REACT_APP_API_URL}/";
-  const normalizeURL = (base: string, p: string) => base.replace(/\/$/, "") + p;
-
   return (
     <div className="min-h-screen py-10 px-4">
-      <div className="max-w-[1100px] mx-auto w-full">
-        
+      <div className="max-w-[1100px] mx-auto w-full px-4 sm:px-6">
         <h2 className="text-3xl font-bold text-indigo-800 mb-6 flex items-center gap-2">
           Resume Manager
           <Tooltip content="Upload and manage your resumes">
-            <span className="w-6 h-6 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">
+            <span className="w-5 h-5 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">
               i
             </span>
           </Tooltip>
@@ -151,27 +118,27 @@ const Resume = () => {
 
         {/* Upload Section */}
         <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
             <h3 className="text-2xl font-semibold text-indigo-700">📤 Upload Resume</h3>
             <Tooltip content="Upload a new resume to analyze it for skills">
-              <span className="w-6 h-6 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">
+              <span className="w-5 h-5 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">
                 i
               </span>
-              </Tooltip>
+            </Tooltip>
           </div>
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-stretch gap-4 flex-wrap w-full">
             <ResumeUpload onUploadSuccess={fetchResumes} />
           </div>
         </section>
 
         {/* Uploaded Resumes */}
         <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
             <h3 className="text-2xl font-semibold text-indigo-700">📂 Your Uploaded Resumes</h3>
             <Tooltip content="View, analyze, or delete your uploaded resumes">
-              <span className="w-6 h-6 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">
-              i
-            </span>
+              <span className="w-5 h-5 text-xs bg-indigo-800 text-white rounded-full inline-flex justify-center items-center cursor-default">
+                i
+              </span>
             </Tooltip>
           </div>
 
@@ -185,14 +152,14 @@ const Resume = () => {
             <ul className="space-y-6">
               {resumes.map(({ _id, filename, uploadedAt, path }) => (
                 <li key={_id} className="p-4 bg-indigo-50 rounded-xl shadow">
-                  <div className="flex justify-between items-center flex-wrap gap-3">
+                  <div className="flex flex-col sm:flex-row justify-between items-stretch gap-4">
                     <div>
-                      <p className="font-semibold text-indigo-800">{filename}</p>
+                      <p className="font-semibold text-indigo-800 truncate max-w-[250px] sm:max-w-none">{filename}</p>
                       <p className="text-sm text-gray-600 mt-1">
                         Uploaded: {new Date(uploadedAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
                       <Tooltip content="View resume in new tab">
                         <a
                           href={`${process.env.REACT_APP_API_URL}${path}`}
@@ -255,22 +222,8 @@ const Resume = () => {
                     </div>
                   </div>
 
-                  {analysisResults[_id] && (
-                    <div className="mt-4 p-4 bg-white rounded-lg border text-sm">
-                      <p className="font-semibold text-indigo-800"> Skills Found:</p>
-                      <p className="text-gray-700 mb-2">
-                        {analysisResults[_id].existing_skills.length
-                          ? analysisResults[_id].existing_skills.join(", ")
-                          : "None"}
-                      </p>
-                      <p className="font-semibold text-purple-800">🔮 Suggested Skills:</p>
-                      <p className="text-gray-700">
-                        {analysisResults[_id].suggested_skills.length
-                          ? analysisResults[_id].suggested_skills.join(", ")
-                          : "None"}
-                      </p>
-                    </div>
-                  )}
+                  {/* 🔄 Using SkillList */}
+                  <SkillList resumeId={_id} />
                 </li>
               ))}
             </ul>
@@ -279,7 +232,6 @@ const Resume = () => {
       </div>
     </div>
   );
-
 };
 
 export default Resume;
