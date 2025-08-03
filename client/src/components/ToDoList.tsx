@@ -51,7 +51,7 @@ const ToDoList: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="max-w-md w-full mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4 text-indigo-600">To-Do List</h2>
 
       <div className="flex mb-4">

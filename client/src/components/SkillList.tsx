@@ -34,7 +34,7 @@ const SkillList: React.FC<SkillListProps> = ({ resumeId }) => {
   }, [resumeId]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6 w-full overflow-x-auto">
         <div className="mb-4">
           <span className="font-semibold text-green-700 dark:text-green-400">Skills Found:</span>
           <ul className="list-disc pl-6 text-gray-700 dark:text-gray-200">

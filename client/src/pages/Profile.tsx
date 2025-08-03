@@ -122,7 +122,7 @@ const Profile: React.FC = () => {
             <label className="text-sm font-semibold mb-2 text-gray-700">
               Profile Picture
             </label>
-            <div className="relative w-28 h-28">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28">
               <img
                 src={previewUrl || '/default-avatar.jpg'}
                 alt="Profile Preview"

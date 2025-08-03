@@ -173,6 +173,7 @@ const ApplicationForm: React.FC = () => {
 
   // Analyze job description
   const doAnalysis = async (desc: string, skills: string[]): Promise<AnalysisResult> => {
+    toast.info("Analyze Resume first");
     console.log("Running job description analysis...");
     const resp = await fetch(`${process.env.REACT_APP_AI_URL}/analyze_job_description`, {
       method: "POST",

@@ -6,7 +6,7 @@ interface Props {
 }
 
 const SkillAnalysisBox: React.FC<Props> = ({ analysis, resumeSkills }) => (
-  <div className="mt-6 bg-indigo-50 border border-indigo-200 rounded-xl p-4 space-y-3 shadow">
+  <div className="mt-6 bg-indigo-50 border border-indigo-200 rounded-xl p-4 space-y-3 shadow w-full overflow-x-auto">
     <h3 className="text-lg font-semibold text-indigo-700 flex items-center gap-2">
       Skill Gap Analysis
     </h3>

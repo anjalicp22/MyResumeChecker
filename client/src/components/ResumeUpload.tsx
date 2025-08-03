@@ -40,7 +40,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onUploadSuccess }) => {
   };
 
   return (
-    <div className="bg-white p-5 rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-4">
+    <div className="bg-white p-5 rounded-lg shadow-md flex flex-col sm:flex-row items-center gap-4 w-full">
       <input
         ref={fileInputRef}
         type="file"

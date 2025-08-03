@@ -43,8 +43,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-200 to-purple-300">
-      <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-md transition-all duration-300">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8 bg-gradient-to-br from-indigo-200 to-purple-300">
+      <div className="bg-white w-full max-w-md sm:rounded-2xl sm:shadow-lg sm:p-10 p-6 transition-all duration-300">
         <h2 className="text-4xl font-extrabold text-center text-indigo-700 mb-8 cursor-help">
             Sign In
         </h2>

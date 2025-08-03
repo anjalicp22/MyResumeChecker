@@ -43,9 +43,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-200 to-purple-300">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8 bg-gradient-to-br from-indigo-200 to-purple-300">
       <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-md transition-all duration-300">
-        <h2 className="text-4xl font-extrabold text-center text-indigo-700 mb-8">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-indigo-700 mb-6 sm:mb-8">
           Create an Account
         </h2>
 
@@ -103,7 +103,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 mt-2 rounded-lg font-semibold shadow transition ${
+            className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 sm:px-6 rounded-lg font-semibold shadow transition ${
               loading ? "opacity-70 cursor-not-allowed" : ""
             }`}
             disabled={loading}
@@ -112,21 +112,21 @@ const Register = () => {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-sm text-gray-600 break-words">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-indigo-600 hover:underline"
-            onClick={() => {
-              console.log("[Register] Navigate to Login clicked");
-              toast.info("Redirecting to login…");
-            }}
+            className="text-indigo-600 hover:underline whitespace-nowrap"
           >
             Login →
           </Link>
         </p>
+
+        
       </div>
+      
     </div>
+    
   );
 };
 

@@ -43,7 +43,7 @@ const PrivateNavbar = () => {
     : '/default-avatar.jpg'; 
 
   return (
-    <nav className="bg-white shadow-md py-4 px-6 flex justify-between items-center rounded-xl">
+    <nav className="bg-white shadow-md py-4 px-6 flex flex-col sm:flex-row  justify-between items-center rounded-xl gap-3 sm:gap-0">
       <h1 className="font-bold text-2xl text-indigo-600 cursor-pointer pr-6">
         <Link to="/">MyResumeChecker</Link>
       </h1>

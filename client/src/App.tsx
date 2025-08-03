@@ -1,4 +1,4 @@
-// client\src\App.tsx
+// client/src/App.tsx
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
@@ -22,31 +22,50 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App: React.FC = () => {
   const { loading } = useAuth();
-  const location = useLocation(); // 👈 detect current route
+  const location = useLocation();
 
   if (loading) {
-    return <div className="text-center mt-10 text-lg text-gray-600">Loading...</div>;
+    return (
+      <div className="text-center mt-20 text-lg text-gray-600 animate-pulse">
+        Loading your workspace...
+      </div>
+    );
   }
 
   const isFullWidth = location.pathname === '/';
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-white via-indigo-50 to-purple-100 text-gray-800">
-      <Navbar />
-      
-      {/* Main content container */}
+    <div className="min-h-screen flex flex-col bg-gradient-to-tr from-white via-indigo-50 to-purple-100 text-gray-800">
+    <Navbar />
+
+      {/* Main page content wrapper */}
       <main
-        className={`pt-24 pb-12 transition-all duration-300 ${
-          isFullWidth ? 'w-full px-0' : 'max-w-5xl mx-auto px-4'
-        }`}
-      >
+          className={`pt-24 pb-12 flex-grow transition-all duration-300 ${
+            isFullWidth
+              ? 'w-full px-4 sm:px-6'
+              : 'max-w-7xl mx-auto w-full px-4 sm:px-6'
+          }`}
+        >
         <ErrorBoundary>
-          <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+          {/* Global toaster */}
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            className="text-sm sm:text-base"
+          />
+
+          {/* Route definitions */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             {/* Protected routes */}
             <Route element={<ProtectedRoute children={undefined} />}>
               <Route path="/dashboard" element={<Dashboard />} />

@@ -133,7 +133,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-10 px-4">
+    <div className="min-h-screen py-10 px-4 md:px-8">
       <div className="max-w-[1100px] mx-auto w-full">
 
       <h2 className="text-3xl font-bold text-indigo-800 mb-6 flex items-center gap-2">
@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
       </h2>
 
       {/* Calendar */}
-      <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
+      <section className="bg-white p-4 sm:p-6 rounded-2xl shadow-md mb-8 w-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-2xl font-semibold text-indigo-700">📅 Calendar Overview</h3>
           <Tooltip content="Shows deadlines and interview dates">
@@ -178,7 +178,7 @@ const Dashboard: React.FC = () => {
       </section>
 
       {/* To-Do List */}
-      <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
+       <section className="bg-white p-4 sm:p-6 rounded-2xl shadow-md mb-8 w-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-2xl font-semibold text-indigo-700">📝 To-Do List</h3>
           <Tooltip content="Track tasks easily">
@@ -234,7 +234,7 @@ const Dashboard: React.FC = () => {
       </section>
 
       {/* Resumes */}
-      <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
+       <section className="bg-white p-4 sm:p-6 rounded-2xl shadow-md mb-8 w-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-2xl font-semibold text-indigo-700">📂 Resumes</h3>
           <Tooltip content="Upload, view, or analyze resumes">
@@ -247,7 +247,7 @@ const Dashboard: React.FC = () => {
           <ul className="space-y-6">
             {resumes.slice(0, 2).map(({ _id, filename, uploadedAt, path }) => (
               <li key={_id} className="p-4 bg-indigo-50 rounded-xl shadow">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   <div>
                     <p className="font-semibold text-indigo-800">{filename}</p>
                     <p className="text-sm text-gray-600 mt-1">
@@ -293,7 +293,7 @@ const Dashboard: React.FC = () => {
       </section>
 
       {/* Skill Suggestions */}
-      <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
+       <section className="bg-white p-4 sm:p-6 rounded-2xl shadow-md mb-8 w-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-2xl font-semibold text-indigo-700">💻 Skill Suggestions</h3>
           <Tooltip content="Get personalized recommendations">
@@ -308,7 +308,7 @@ const Dashboard: React.FC = () => {
       </section>
 
       {/* Quick Links */}
-      <section className="bg-white p-6 rounded-2xl shadow-md mb-8">
+       <section className="bg-white p-4 sm:p-6 rounded-2xl shadow-md mb-8 w-full">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-2xl font-semibold text-indigo-700">🔗 Quick Links</h3>
           <Tooltip content="Navigate quickly">

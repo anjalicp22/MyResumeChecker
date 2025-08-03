@@ -20,7 +20,7 @@ const Tooltip: React.FC<TooltipProps> = ({ content, children, position = "top" }
     <div className="relative inline-block group">
       {children}
       <div
-        className={`absolute ${positionClasses[position]} w-64 rounded-md bg-gray-900 text-white p-3 text-xs shadow-lg opacity-0 pointer-events-none 
+        className={`absolute ${positionClasses[position]} max-w-xs sm:max-w-sm rounded-md bg-gray-900 text-white p-3 text-xs shadow-lg opacity-0 pointer-events-none 
         transition-opacity duration-300 group-hover:opacity-100 z-50`}
       >
         {content}
