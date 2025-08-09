@@ -57,6 +57,18 @@ const Skills: React.FC = () => {
 
   const normExisting = useMemo(() => new Set(normalizeArray(existingSkills)), [existingSkills]);
   const normRequired = useMemo(() => normalizeArray(requiredSkills), [requiredSkills]);
+  const isResumeDisabled = (resumeId: string) => {
+    return (
+      resumeId === selectedResume &&
+      existingSkills.length === 0 &&
+      suggestedSkills.length === 0
+    );
+  };
+
+  // Helper: App is disabled if it has no required skills
+  const isAppDisabled = (app: Application) => {
+    return !app.analysisResult?.required_skills?.length;
+  };
 
   useEffect(() => {
     (async () => {
@@ -150,14 +162,7 @@ const Skills: React.FC = () => {
     return { matched, missing, pct };
   }, [normRequired, normExisting]);
 
-  const courseRecs = useMemo(() => {
-    return missingSkills.map((skill) => ({
-      skill,
-      provider: "Coursera / Udemy",
-      link: `https://www.google.com/search?q=${encodeURIComponent(skill + " course")}`,
-      level: "Beginner",
-    }));
-  }, [missingSkills]);
+  
 
   if (loading) {
     return (
@@ -193,13 +198,22 @@ const Skills: React.FC = () => {
                 {resumes.length === 0 ? (
                   <p className="text-gray-500 italic">📂 No resumes available.</p>
                 ) : (
-                  resumes.map((r) => (
+                  resumes.map((r) => {
+                    const disabled = isResumeDisabled(r._id);
+                    return (
                     <button
                       key={r._id}
-                      onClick={() => setSelectedResume(r._id)}
+                      onClick={() => {
+                        if (disabled) {
+                          toast.warning("Analyze resume and application first");
+                          return;
+                        }
+                        setSelectedResume(r._id);
+                      }}
+                      disabled={disabled}
                       className={`w-full p-4 rounded-lg border text-left shadow-sm hover:shadow transition ${
                         selectedResume === r._id ? "border-indigo-600 bg-indigo-50" : "border-gray-200 bg-white"
-                      }`}
+                      }${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                       <div className="font-medium break-words max-w-full">
                         {r.filename}
@@ -208,7 +222,7 @@ const Skills: React.FC = () => {
                         {new Date(r.uploadedAt).toLocaleDateString()}
                       </div>
                     </button>
-                  ))
+                  )})
                 )}
               </div>
             </div>
@@ -218,20 +232,27 @@ const Skills: React.FC = () => {
                 {applications.length === 0 ? (
                   <p className="text-gray-500 italic">📁 No applications available.</p>
                 ) : (
-                  applications.map((a) => (
+                  applications.map((a) => {
+                  const disabled = isAppDisabled(a);
+                  return (
                     <button
                       key={a._id}
-                      onClick={() => setSelectedApp(a._id)}
+                      onClick={() => {
+                      if (disabled) {
+                        toast.warning("Analyze resume and application first");
+                        return;
+                      }setSelectedApp(a._id)}}
+                      disabled={disabled}
                       className={`w-full p-4 rounded-lg border text-left shadow-sm hover:shadow transition ${
                         selectedApp === a._id ? "border-purple-600 bg-purple-50" : "border-gray-200 bg-white"
-                      }`}
+                      }${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                       <div className="font-medium break-words max-w-full">{a.company || a.title || "Untitled Job"}</div>
                       <div className="text-xs text-gray-500">
                         Required: {a.analysisResult?.required_skills.length ?? 0}
                       </div>
                     </button>
-                  ))
+                  )})
                 )}
               </div>
             </div>
