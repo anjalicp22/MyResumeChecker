@@ -29,11 +29,19 @@ const PrivateNavbar = () => {
           MyResumeChecker
         </Link>
         <div className="flex flex-wrap items-center gap-3 sm:gap-6 justify-center sm:justify-end">
-          {["Home", "Dashboard", "Resume", "Skills", "Applications"].map((label, idx) => (
-            <Link key={idx} to={`/${label.toLowerCase()}`} className="hover:text-indigo-500 transition">
-              {label}
-            </Link>
-          ))}
+          {["Home", "Dashboard", "Resume", "Skills", "Applications"].map((label, idx) => {
+            const path = label === "Home" ? "/" : `/${label.toLowerCase()}`;
+            return (
+              <Link
+                key={idx}
+                to={path}
+                className="hover:text-indigo-500 transition"
+              >
+                {label}
+              </Link>
+            );
+          })}
+
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setOpen(o => !o)}
