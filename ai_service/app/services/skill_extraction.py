@@ -8,7 +8,7 @@ import re
 
 load_dotenv()
 # co = cohere.Client(os.getenv("COHERE_API_KEY"))
-co = cohere.ClientV2(token=os.getenv("COHERE_API_KEY"))
+co = co = cohere.ClientV2(api_key=os.getenv("COHERE_API_KEY"))
 
 def suggest_additional_skills_from_resume(resume_text: str, job_description: str = "") -> dict:
     prompt = f"""
