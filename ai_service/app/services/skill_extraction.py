@@ -28,9 +28,10 @@ Respond in this exact JSON format:
 """
 
     try:
-        response = co.generate(
+        response = co.chat(
             model="command-r-plus",
-            prompt=prompt,
+            messages=[{"role": "user", "content": prompt}],
+            # prompt=prompt,
             max_tokens=300,
             temperature=0.5,
         )
