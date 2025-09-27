@@ -41,6 +41,22 @@ const Resume = () => {
     }
   };
 
+  const viewResume = async (resumeId: string) => {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/resume/file/${resumeId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        toast.error("Failed to fetch resume.");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    };
+
+
   useEffect(() => {
     if (!token) {
       toast.warning("You must be logged in to view resumes.");
@@ -66,15 +82,17 @@ const Resume = () => {
     setAnalyzing((prev) => ({ ...prev, [resumeId]: true }));
 
     try {
-      const fileName = resumePath.split("/").pop();
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/uploads/resume/${fileName}`);
-      const blob = await response.blob();
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/resume/file/${resumePath}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (!response.ok) {
         toast.error("Resume file could not be fetched.");
         return;
       }
 
+      const blob = await response.blob();
+      const fileName = resumePath.split("/").pop();
       const formData = new FormData();
       formData.append("file", blob, fileName);
 
@@ -161,14 +179,16 @@ const Resume = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
                       <Tooltip content="View resume in new tab">
-                        <a
-                          href={`${process.env.REACT_APP_API_URL}${path}`}
-                          target="_blank"
-                          rel="noreferrer"
+                        <button
+                          // href={`${process.env.REACT_APP_API_URL}${path}`}
+                          // href={`${process.env.REACT_APP_API_URL}/api/resume/file/${path}`} 
+                          // target="_blank"
+                          // rel="noreferrer"
+                          onClick={() => viewResume(path)}
                           className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium hover:bg-indigo-200 transition"
                         >
                           View
-                        </a>
+                        </button>
                       </Tooltip>
 
                       <Tooltip content="Analyze resume for skills">
