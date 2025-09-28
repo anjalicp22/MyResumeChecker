@@ -75,6 +75,7 @@ const ApplicationForm: React.FC = () => {
   const [loadingSkills, setLoadingSkills] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [analyzing, setAnalyzing] = useState(false);
 
   const statusOptions = ["Applied", "Interview Scheduled", "Rejected", "Offer Received"];
 
@@ -120,25 +121,27 @@ const ApplicationForm: React.FC = () => {
 
   // Load skills for the selected resume
   useEffect(() => {
-    (async () => {
-      console.log(`🔄 Loading skills for resume: ${selectedResumeId}`);
-      setLoadingSkills(true);
-      setResumeSkills([]);
-      try {
-        if (selectedResumeId !== "None") {
-          const resp = await getSkillsForResume(selectedResumeId, token!);
-          console.log(` Skills for resume ${selectedResumeId}:`, resp.data);
-          setResumeSkills(resp.data?.[0]?.skills || []);
+    const loadSkills = async () => {
+        setLoadingSkills(true);
+        try {
+          if (selectedResumeId === "None") {
+            setResumeSkills([]);
+            setResumeSkillsMap(prev => ({ ...prev, None: [] }));
+          } else {
+            const resp = await getSkillsForResume(selectedResumeId, token!);
+            const skills = resp.data?.[0]?.skills || [];
+            setResumeSkills(skills);
+            setResumeSkillsMap(prev => ({ ...prev, [selectedResumeId]: skills }));
+          }
+        } catch (err) {
+          logError("loadSkills", err);
+          toast.error("Failed to load resume skills.");
+        } finally {
+          setLoadingSkills(false);
         }
-      } catch (err) {
-        logError("loadSkills", err);
-        toast.error("Failed to load resume skills.");
-      } finally {
-        setLoadingSkills(false);
-      }
-    })();
-  }, [selectedResumeId, token]);
-
+      };
+      loadSkills();
+    }, [selectedResumeId, token]);
   // Generic form field change
   const handleChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
@@ -173,7 +176,7 @@ const ApplicationForm: React.FC = () => {
 
   // Analyze job description
   const doAnalysis = async (desc: string, skills: string[]): Promise<AnalysisResult> => {
-    toast.info("Analyze Resume first");
+    // toast.info("Analyze Resume first");
     console.log("Running job description analysis...");
     const resp = await fetch(`${process.env.REACT_APP_AI_URL}/analyze_job_description`, {
       method: "POST",
@@ -185,8 +188,11 @@ const ApplicationForm: React.FC = () => {
     console.log("AI JD Analysis response:", json);
 
     if (!json.required_skills) throw new Error("No skills extracted");
-
-    const missing = getMissingSkillsFuzzy(json.required_skills, skills);
+    const normalize = (s: string) => s.trim().toLowerCase();
+    const missing = getMissingSkillsFuzzy(
+      json.required_skills.map(normalize),
+      skills.map(normalize)
+    );
     return {
       required_skills: json.required_skills.map(capitalize),
       missing_skills: missing.map(capitalize),
@@ -196,23 +202,26 @@ const ApplicationForm: React.FC = () => {
 
   // Handle analyze click
   const handleAnalyze = async () => {
-    console.log(" Analyze button clicked.");
+    
     const errs = validateForm();
     if (Object.keys(errs).length) {
       setErrors(errs);
       return;
     }
     try {
+      setAnalyzing(true);
       setSubmitting(true);
-      const result = await doAnalysis(formData.jobDescription, resumeSkills);
+      const skills = selectedResumeId === "None" ? [] : resumeSkills;
+      const result = await doAnalysis(formData.jobDescription, skills);
+      setAnalysis(result);
       console.log(" Analysis completed:", result);
       toast.success("Analysis completed successfully.");
-      setAnalysis(result);
     } catch (err) {
       logError("handleAnalyze", err);
       toast.error("Analysis failed. Check console.");
     } finally {
-      setSubmitting(false);
+      // setSubmitting(false);
+      setAnalyzing(false);
     }
   };
 
@@ -276,6 +285,51 @@ const ApplicationForm: React.FC = () => {
       setCardErrors(prev => ({ ...prev, [id]: "Status update failed." }));
     }
   };
+
+  // if analysis is missing or empty arrays → re-run AI
+  const analyzeAndUpdateApp = async (app: Application) => {
+  try {
+    const needsAnalysis =
+      !app.analysisResult ||
+      app.analysisResult.required_skills.length === 0 ||
+      app.analysisResult.missing_skills.length === 0;
+
+    if (!app.jobDescription) return null;
+
+    let result = app.analysisResult;
+
+    if (needsAnalysis) {
+      const skills =
+        app.resumeUsed === "None"
+          ? []
+          : (await getSkillsForResume(app.resumeUsed!, token!)).data?.[0]?.skills || [];
+
+      setResumeSkillsMap(prev => ({ ...prev, [app.resumeUsed!]: skills }));
+
+      // 🔄 reuse existing logic
+      result = await doAnalysis(app.jobDescription, skills);
+
+      // save back to DB
+      const updated = { ...app, analysisResult: result };
+      await api.put(`/api/applications/${app._id}`, updated, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setApplications(prev =>
+        prev.map(a => (a._id === app._id ? updated : a))
+      );
+
+      toast.success("Analysis re-run and saved.");
+    }
+
+    return result;
+  } catch (err) {
+    logError("analyzeAndUpdateApp", err);
+    toast.error("Failed to analyze. Check console.");
+    return null;
+  }
+};
+
 
   //  Recommend best resume
   const handleRecommend = async () => {
@@ -451,6 +505,15 @@ const ApplicationForm: React.FC = () => {
                   </option>
                 ))}
               </select>
+              {/* Resume skills loader */}
+              {loadingSkills && (
+                <div className="flex items-center text-sm text-gray-600 mt-2">
+                  <svg className="animate-spin h-4 w-4 mr-2 text-indigo-600" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  </svg>
+                  Loading resume skills…
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -476,6 +539,11 @@ const ApplicationForm: React.FC = () => {
         
 
         {/* Action buttons */}
+        {!analysis && (
+          <p className="text text-indigo-600 mb-2">
+            ⚠️ Please analyze the job description with a resume before saving.
+          </p>
+        )}
 
         <div className="flex flex-wrap justify-center gap-3 mt-6">
           {[
@@ -515,7 +583,7 @@ const ApplicationForm: React.FC = () => {
             {
               label: submitting ? "Saving…" : "Save",
               onClick: handleSubmit,
-              disabled: submitting,
+              disabled: submitting || !analysis ,
               color: "bg-green-600 hover:bg-green-700",
             },
             {
@@ -577,6 +645,14 @@ const ApplicationForm: React.FC = () => {
           </div>
         )}
 
+        {recommending && (
+          <div className="flex items-center text-sm text-gray-600 mt-2">
+            <svg className="animate-spin h-4 w-4 mr-2 text-indigo-600" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+            </svg>
+            Finding best resume…
+          </div>
+        )}
 
 
         {recommendResult && (
@@ -719,9 +795,9 @@ const ApplicationForm: React.FC = () => {
                           ? []
                           : (await getSkillsForResume(rid, token!)).data?.[0]?.skills || [];
                         setResumeSkillsMap(prev => ({ ...prev, [rid]: skills }));
-                        const result = app.jobDescription && skills.length
-                          ? await doAnalysis(app.jobDescription, skills).catch(() => null)
-                          : null;
+                        const result = app.jobDescription
+                        ? await doAnalysis(app.jobDescription, skills).catch(() => null)
+                        : null;
                         const updated = { ...app, resumeUsed: rid, analysisResult: result };
                         await api.put(`/api/applications/${app._id}`, updated, { headers: { Authorization: `Bearer ${token}` } });
                         setApplications(prev => prev.map(a => a._id === app._id ? updated : a));
@@ -748,18 +824,7 @@ const ApplicationForm: React.FC = () => {
                       <button
                         className="flex-1 bg-purple-600 text-white text-sm px-3 py-1 rounded-lg hover:bg-purple-700"
                         disabled={submitting}
-                        onClick={async () => {
-                          const skills = app.resumeUsed === "None"
-                            ? []
-                            : (await getSkillsForResume(app.resumeUsed!, token!)).data?.[0]?.skills || [];
-                          setResumeSkillsMap(prev => ({ ...prev, [app.resumeUsed!]: skills }));
-                          const result = app.jobDescription
-                            ? await doAnalysis(app.jobDescription, skills).catch(() => null)
-                            : null;
-                          const updated = { ...app, analysisResult: result };
-                          await api.put(`/api/applications/${app._id}`, updated, { headers: { Authorization: `Bearer ${token}` } });
-                          setApplications(prev => prev.map(a => a._id === app._id ? updated : a));
-                        }}
+                        onClick={() => analyzeAndUpdateApp(app)}
                       >
                         Analyze
                       </button>
@@ -818,7 +883,32 @@ const ApplicationForm: React.FC = () => {
           )}
         </section>
 
+    {/* Analyzing overlay */}
+    {analyzing && (
+      <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="bg-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3">
+          <svg className="animate-spin h-6 w-6 text-purple-600" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+          </svg>
+          <span className="text-gray-700 font-medium">Analyzing job description…</span>
         </div>
+      </div>
+    )}
+
+
+    {/* Global submitting overlay */}
+    {submitting && (
+      <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+        <div className="bg-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3">
+          <svg className="animate-spin h-5 w-5 text-indigo-600" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+          </svg>
+          <span className="text-gray-700 font-medium">Processing…</span>
+        </div>
+      </div>
+    )}
+
+    </div>
   );
 };
 
