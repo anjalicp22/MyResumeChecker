@@ -78,7 +78,7 @@ const Resume = () => {
     }
   };
 
-  const handleAnalyze = async (resumePath: string, resumeId: string) => {
+  const handleAnalyze = async (resumePath: string, resumeId: string, filename: string) => {
     setAnalyzing((prev) => ({ ...prev, [resumeId]: true }));
 
     try {
@@ -92,9 +92,8 @@ const Resume = () => {
       }
 
       const blob = await response.blob();
-      const fileName = resumePath.split("/").pop();
       const formData = new FormData();
-      formData.append("file", blob, fileName);
+      formData.append("file", blob, filename);
 
       const aiRes = await fetch(`${process.env.REACT_APP_AI_URL}/analyze-resume-file`, {
         method: "POST",
@@ -193,7 +192,7 @@ const Resume = () => {
 
                       <Tooltip content="Analyze resume for skills">
                         <button
-                          onClick={() => handleAnalyze(path, _id)}
+                          onClick={() => handleAnalyze(path, _id, filename)}
                           className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
                             analyzing[_id]
                               ? "bg-purple-300 text-white cursor-not-allowed"
