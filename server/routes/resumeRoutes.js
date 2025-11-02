@@ -6,6 +6,7 @@ const {
   uploadResume,
   getResumes,
   deleteResume,
+  getResumeFile,
 } = require("../controllers/resumeController.js");
 const { resumeUpload } = require("../middleware/upload.js");
 
@@ -17,5 +18,7 @@ router.post("/", protect, resumeUpload.single("resume"), uploadResume);
 
 // DELETE /api/resume/:id
 router.delete("/:id", protect, deleteResume);
+
+router.get("/file/:id", protect, getResumeFile);
 
 module.exports = router;
