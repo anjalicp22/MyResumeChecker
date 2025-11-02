@@ -41,22 +41,6 @@ const Resume = () => {
     }
   };
 
-  const viewResume = async (resumeId: string) => {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/resume/file/${resumeId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        toast.error("Failed to fetch resume.");
-        return;
-      }
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
-    };
-
-
   useEffect(() => {
     if (!token) {
       toast.warning("You must be logged in to view resumes.");
@@ -78,22 +62,21 @@ const Resume = () => {
     }
   };
 
-  const handleAnalyze = async (resumePath: string, resumeId: string, filename: string) => {
+  const handleAnalyze = async (resumePath: string, resumeId: string) => {
     setAnalyzing((prev) => ({ ...prev, [resumeId]: true }));
 
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/resume/file/${resumePath}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const fileName = resumePath.split("/").pop();
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/uploads/resume/${fileName}`);
+      const blob = await response.blob();
 
       if (!response.ok) {
         toast.error("Resume file could not be fetched.");
         return;
       }
 
-      const blob = await response.blob();
       const formData = new FormData();
-      formData.append("file", blob, filename);
+      formData.append("file", blob, fileName);
 
       const aiRes = await fetch(`${process.env.REACT_APP_AI_URL}/analyze-resume-file`, {
         method: "POST",
@@ -178,21 +161,19 @@ const Resume = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
                       <Tooltip content="View resume in new tab">
-                        <button
-                          // href={`${process.env.REACT_APP_API_URL}${path}`}
-                          // href={`${process.env.REACT_APP_API_URL}/api/resume/file/${path}`} 
-                          // target="_blank"
-                          // rel="noreferrer"
-                          onClick={() => viewResume(path)}
+                        <a
+                          href={`${process.env.REACT_APP_API_URL}${path}`}
+                          target="_blank"
+                          rel="noreferrer"
                           className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium hover:bg-indigo-200 transition"
                         >
                           View
-                        </button>
+                        </a>
                       </Tooltip>
 
                       <Tooltip content="Analyze resume for skills">
                         <button
-                          onClick={() => handleAnalyze(path, _id, filename)}
+                          onClick={() => handleAnalyze(path, _id)}
                           className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
                             analyzing[_id]
                               ? "bg-purple-300 text-white cursor-not-allowed"

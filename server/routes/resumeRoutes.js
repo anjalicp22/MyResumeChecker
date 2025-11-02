@@ -5,16 +5,12 @@ const { protect } = require("../middleware/authMiddleware.js");
 const {
   uploadResume,
   getResumes,
-  getResumeFile,
   deleteResume,
 } = require("../controllers/resumeController.js");
 const { resumeUpload } = require("../middleware/upload.js");
 
 // GET /api/resume
 router.get("/", protect, getResumes);
-
-// GET /api/resume/file/:id
-router.get("/file/:id", protect, getResumeFile);
 
 // POST /api/resume
 router.post("/", protect, resumeUpload.single("resume"), uploadResume);
