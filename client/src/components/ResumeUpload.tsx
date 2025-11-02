@@ -2,12 +2,15 @@
 import React, { useRef, useState } from "react";
 import { uploadResume } from "../services/resumeService";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+
 
 interface ResumeUploadProps {
   onUploadSuccess?: () => void;
 }
 
 const ResumeUpload: React.FC<ResumeUploadProps> = ({ onUploadSuccess }) => {
+  const { token } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -20,7 +23,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({ onUploadSuccess }) => {
 
     try {
       setUploading(true);
-      const res = await uploadResume(formData);
+      const res = await uploadResume(formData, token);
       onUploadSuccess?.();
       console.log("Upload success:", res.data);
       toast.success("Resume uploaded successfully!");
