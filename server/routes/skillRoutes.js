@@ -15,15 +15,6 @@ const Skill = require("../models/Skill.js");
 
 router.route("/").get(protect, getSkills).post(protect, addSkill);
 
-// New route to save skills from analyzed resume
-router.route("/analyze").post(protect, saveAnalyzedSkills);
-
-router.route("/frequency").get(protect, getSkillFrequencyAgg);
-
-router.route("/gap").get(protect, gapAnalysis);
-
-router.route("/:id").delete(protect, deleteSkill);
-
 router.get("/resume/:resumeId", protect, async (req, res) => {
   try {
     const { resumeId } = req.params;
@@ -49,5 +40,14 @@ router.get("/resume/:resumeId", protect, async (req, res) => {
     res.status(500).json({ message: "Server error fetching resume skills" });
   }
 });
+
+// New route to save skills from analyzed resume
+router.route("/analyze").post(protect, saveAnalyzedSkills);
+
+router.route("/frequency").get(protect, getSkillFrequencyAgg);
+
+router.route("/gap").get(protect, gapAnalysis);
+
+router.route("/:id").delete(protect, deleteSkill);
 
 module.exports = router;
