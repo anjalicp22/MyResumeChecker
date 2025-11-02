@@ -79,13 +79,13 @@ const Resume = () => {
 
   const handleAnalyze = async (resumePath: string, resumeId: string) => {
     try {
-      const skillCheck = await fetch(`${process.env.REACT_APP_API_URL}/api/skills/${resumeId}`, {
+      const skillCheck = await fetch(`${process.env.REACT_APP_API_URL}/api/skills?source=resume&ref=${resumeId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (skillCheck.ok) {
         const skillData = await skillCheck.json();
-        if (skillData && skillData.skills && skillData.skills.length > 0) {
+        if (skillData && skillData.skills && skillData.length > 0) {
           toast.info("Skills already analyzed for this resume.");
           // optionally trigger SkillList refresh if needed
           await fetchResumes();

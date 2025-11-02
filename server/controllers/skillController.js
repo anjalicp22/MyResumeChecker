@@ -65,6 +65,7 @@ const saveAnalyzedSkills = async (req, res) => {
     console.log("🔮 [saveAnalyzedSkills] suggested:", suggested_skills);
 
     const normExisting = normalizeArray(existing_skills);
+    const normSuggested = normalizeArray(suggested_skills);
 
     await Skill.deleteMany({
       user: req.user._id,
@@ -83,26 +84,35 @@ const saveAnalyzedSkills = async (req, res) => {
         isSuggested: false,
       });
     }
+
+    if (normSuggested.length) {
+      skillDocs.push({
+        user: req.user._id,
+        source: "resume",
+        sourceRef: resumeId,
+        skills: normSuggested,
+        isSuggested: true,
+      });
+    }
+    if (normSuggested.length) {
+      skillDocs.push({
+        user: req.user._id,
+        source: "resume",
+        sourceRef: resumeId,
+        skills: normSuggested,
+        isSuggested: true,
+      });
+    }
+
+    if (skillDocs.length) {
+      await Skill.insertMany(skillDocs);
+    }
+
+    res.status(201).json({ message: "Skills saved successfully" });
   } catch (error) {
     console.error("saveAnalyzedSkills error:", err);
     res.status(500).json({ message: "Failed to save analyzed skills" });
   }
-
-  if (normSuggested.length) {
-    skillDocs.push({
-      user: req.user._id,
-      source: "resume",
-      sourceRef: resumeId,
-      skills: normSuggested,
-      isSuggested: true,
-    });
-  }
-
-  if (skillDocs.length) {
-    await Skill.insertMany(skillDocs);
-  }
-
-  res.status(201).json({ message: "Skills saved successfully" });
 };
 
 const deleteSkill = async (req, res) => {
