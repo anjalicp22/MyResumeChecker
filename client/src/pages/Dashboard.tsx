@@ -250,9 +250,19 @@ const Dashboard: React.FC = () => {
                       <p className="text-sm text-gray-600 mt-1">Uploaded: {new Date(uploadedAt).toLocaleDateString()}</p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <Tooltip content="View resume in new tab">
+                      {/* <Tooltip content="View resume in new tab">
                         <a href={`${process.env.REACT_APP_API_URL}${path}`} target="_blank" rel="noreferrer"
                            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium hover:bg-indigo-200 transition">View</a>
+                      </Tooltip> */}
+                      <Tooltip content="This feature is temporarily unavailable (under development)">
+                        <div>
+                          <button
+                            disabled
+                            className="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium hover:bg-indigo-200 cursor-not-allowed transition"
+                          >
+                            View
+                          </button>
+                        </div>
                       </Tooltip>
                       <Tooltip content="Analyze resume for skills">
                         <button

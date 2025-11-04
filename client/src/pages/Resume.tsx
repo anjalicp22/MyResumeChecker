@@ -195,7 +195,7 @@ const Resume = () => {
                       </p>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
-                      <Tooltip content="View resume in new tab">
+                      {/* <Tooltip content="View resume in new tab">
                         <button
                           // href={`${process.env.REACT_APP_API_URL}${path}`}
                           // href={`${process.env.REACT_APP_API_URL}/api/resume/file/${path}`} 
@@ -206,7 +206,18 @@ const Resume = () => {
                         >
                           View
                         </button>
+                      </Tooltip> */}
+                      <Tooltip content="This feature is temporarily unavailable (under development)">
+                        <div>
+                          <button
+                            disabled
+                            className="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg font-medium cursor-not-allowed transition"
+                          >
+                            View
+                          </button>
+                        </div>
                       </Tooltip>
+
 
                       <Tooltip content="Analyze resume for skills">
                         <button
