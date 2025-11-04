@@ -69,6 +69,7 @@ const ApplicationForm: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cardErrors, setCardErrors] = useState<Record<string, string>>({});
   const [showAllDetailsMap, setShowAllDetailsMap] = useState<Record<string, boolean>>({});
+  const [cardAnalyzing, setCardAnalyzing] = useState<{ [id: string]: boolean }>({});
 
   // Loading & validation states
   const [loadingInitial, setLoadingInitial] = useState(true);
@@ -210,7 +211,7 @@ const ApplicationForm: React.FC = () => {
     }
     try {
       setAnalyzing(true);
-      setSubmitting(true);
+      // setSubmitting(true);
       const skills = selectedResumeId === "None" ? [] : resumeSkills;
       const result = await doAnalysis(formData.jobDescription, skills);
       setAnalysis(result);
@@ -569,9 +570,35 @@ const ApplicationForm: React.FC = () => {
               color: "bg-orange-500 hover:bg-orange-600",
             },
             {
-              label: "Analyze",
+              label: analyzing ? (
+                <>
+                  <svg
+                    className="animate-spin h-4 w-4 mr-2 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  Analyzing…
+                </>
+              ) : (
+                "Analyze"
+              ),
               onClick: handleAnalyze,
-              disabled: submitting || loadingSkills,
+              disabled: submitting || loadingSkills || analyzing,
               color: "bg-purple-600 hover:bg-purple-700",
             },
             {
@@ -790,19 +817,24 @@ const ApplicationForm: React.FC = () => {
                       value={app.resumeUsed || "None"}
                       disabled={submitting}
                       onChange={async (e) => {
-                        const rid = e.target.value;
-                        const skills = rid === "None"
-                          ? []
-                          : (await getSkillsForResume(rid, token!)).data?.[0]?.skills || [];
-                        setResumeSkillsMap(prev => ({ ...prev, [rid]: skills }));
-                        const result = app.jobDescription
-                        ? await doAnalysis(app.jobDescription, skills).catch(() => null)
-                        : null;
-                        const updated = { ...app, resumeUsed: rid, analysisResult: result };
-                        await api.put(`/api/applications/${app._id}`, updated, { headers: { Authorization: `Bearer ${token}` } });
-                        setApplications(prev => prev.map(a => a._id === app._id ? updated : a));
-                      }}
-                    >
+                          const rid = e.target.value;
+                          setLoadingSkills(true); 
+                          try {
+                            const skills = rid === "None"
+                              ? []
+                              : (await getSkillsForResume(rid, token!)).data?.[0]?.skills || [];
+                            setResumeSkillsMap(prev => ({ ...prev, [rid]: skills }));
+                            const result = app.jobDescription
+                            ? await doAnalysis(app.jobDescription, skills).catch(() => null)
+                            : null;
+                            const updated = { ...app, resumeUsed: rid, analysisResult: result };
+                            await api.put(`/api/applications/${app._id}`, updated, { headers: { Authorization: `Bearer ${token}` } });
+                            setApplications(prev => prev.map(a => a._id === app._id ? updated : a));
+                          } finally {
+                              setLoadingSkills(false);
+                          }
+                        }}
+                      >
                       <option value="None">None</option>
                       {resumes.map((r) => (
                         <option key={r._id} value={r._id}>{r.filename}</option>
@@ -823,10 +855,45 @@ const ApplicationForm: React.FC = () => {
                     <div className="flex gap-2">
                       <button
                         className="flex-1 bg-purple-600 text-white text-sm px-3 py-1 rounded-lg hover:bg-purple-700"
-                        disabled={submitting}
-                        onClick={() => analyzeAndUpdateApp(app)}
+                        disabled={submitting|| cardAnalyzing[app._id]}
+                        onClick={async () => {
+                          setCardAnalyzing(prev => ({ ...prev, [app._id]: true }));
+                          try {
+                            await analyzeAndUpdateApp(app);
+                          } catch (err) {
+                            console.error("Card analyze failed:", err);
+                          } finally {
+                            setCardAnalyzing(prev => ({ ...prev, [app._id]: false }));
+                          }
+                        }}
                       >
-                        Analyze
+                        {cardAnalyzing[app._id] ? (
+                          <>
+                            <svg
+                              className="animate-spin h-4 w-4 mr-1 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8v8H4z"
+                              ></path>
+                            </svg>
+                            Analyzing…
+                          </>
+                        ) : (
+                          "Analyze"
+                        )}
                       </button>
                       <button
                         className="flex-1 bg-yellow-500 text-white text-sm px-3 py-1 rounded-lg hover:bg-yellow-600"

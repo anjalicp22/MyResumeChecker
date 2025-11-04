@@ -2,8 +2,12 @@
 
 const Application = require("../models/Application.js");
 const Skill = require("../models/Skill.js");
-const { spawn } = require("child_process");
+// const { spawn } = require("child_process");
 const path = require("path");
+const axios = require("axios");
+
+const FASTAPI_URL =
+  process.env.FASTAPI_URL || "https://your-fastapi-service-url.com";
 
 const getApplications = async (req, res) => {
   const applications = await Application.find({ user: req.user._id });
@@ -20,49 +24,46 @@ const createApplication = async (req, res) => {
     });
 
     const jobDescText = req.body.jobDescription;
+    let jdSkills = [];
+    let extractionError = false;
+    try {
+      const response = await axios.post(
+        `${FASTAPI_URL}/analyze-job-description`,
+        { text: jobDescText },
+        { timeout: 60000 }
+      );
 
-    const py = spawn("python", [path.resolve(__dirname, "../extractor.py")]);
-
-    let stdout = "";
-    let stderr = "";
-
-    py.stdout.on("data", (data) => (stdout += data.toString()));
-    py.stderr.on("data", (data) => (stderr += data.toString()));
-
-    py.on("close", async (code) => {
-      let jdSkills = [];
-      let extractionError = false;
-
-      if (code !== 0) {
-        console.error("JD skill extraction failed:", stderr);
-        extractionError = true;
-      } else {
-        try {
-          jdSkills = JSON.parse(stdout);
-          await Skill.create({
-            user: req.user._id,
-            source: "job_description",
-            sourceRef: newApp._id.toString(),
-            skills: jdSkills,
-          });
-        } catch (err) {
-          console.error("Skill JSON parse error:", err);
-          extractionError = true;
-        }
+      if (response?.data) {
+        const { existing_skills, suggested_skills } = response.data;
+        jdSkills = [...(existing_skills || []), ...(suggested_skills || [])];
       }
-
-      return res.status(201).json({
-        message: extractionError
-          ? "Application saved, but skill extraction failed"
-          : "Application saved and skills extracted",
-        application: newApp,
-        jdSkills,
-        extractionError,
+    } catch (apiErr) {
+      console.error(
+        "FastAPI job description extraction failed:",
+        apiErr.message
+      );
+      extractionError = true;
+    }
+    try {
+      await Skill.create({
+        user: req.user._id,
+        source: "job_description",
+        sourceRef: newApp._id.toString(),
+        skills: jdSkills,
       });
-    });
+    } catch (skillErr) {
+      console.error("Failed to save JD skills to DB:", skillErr);
+      extractionError = true;
+    }
 
-    py.stdin.write(jobDescText);
-    py.stdin.end();
+    return res.status(201).json({
+      message: extractionError
+        ? "Application saved, but skill extraction failed"
+        : "Application saved and skills extracted",
+      application: newApp,
+      jdSkills,
+      extractionError,
+    });
   } catch (err) {
     console.error("Create application error:", err);
     res.status(500).json({ message: "Failed to save application" });

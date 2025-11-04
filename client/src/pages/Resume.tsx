@@ -58,6 +58,9 @@ const Resume = () => {
 
   useEffect(() => {
     if (!token) {
+      setResumes([]);
+      setLoading(false);
+      setError(null);
       toast.warning("You must be logged in to view resumes.");
       navigate("/", { replace: true });
       return;

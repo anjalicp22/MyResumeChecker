@@ -2,10 +2,15 @@
 const Resume = require("../models/Resume.js");
 // const User = require("../models/user.js");
 const Skill = require("../models/Skill.js");
-const { execFile } = require("child_process"); // Add at top
+// const { execFile } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const mime = require("mime");
+const axios = require("axios");
+const FormData = require("form-data");
+
+const FASTAPI_URL =
+  process.env.FASTAPI_URL || "https://your-fastapi-service-url.com"; // or localhost:8000
 
 const uploadResume = async (req, res) => {
   try {
@@ -34,66 +39,55 @@ const uploadResume = async (req, res) => {
       req.file.filename
     );
 
-    const extractorPath = path.join(__dirname, "..", "python", "extractor.py");
+    const formData = new FormData();
+    formData.append("file", fs.createReadStream(resumeFullPath));
 
-    execFile(
-      "python",
-      [extractorPath, resumeFullPath],
-      async (error, stdout, stderr) => {
-        if (error || jsonErr) {
-          console.error("Extractor or parse error:", error || jsonErr);
-          return res.status(200).json({
-            message: "Resume uploaded, extraction failed. Please check logs.",
-            resume,
-            extractedSkills: [],
-            extractionError: true,
-            extractorStdErr: stderr || null,
-          });
-        }
+    let extractedSkills = [];
+    let extractionError = false;
 
-        // const extractedSkills = JSON.parse(stdout); // ← assuming output is JSON list
-        let extractedSkills = [];
-        try {
-          extractedSkills = JSON.parse(stdout || "[]");
-        } catch (jsonErr) {
-          console.error("JSON parse error:", jsonErr);
-          return res.status(500).json({
-            message: "Skill parsing failed",
-            resume,
-            extractedSkills: [],
-            extractionError: true,
-          });
-        }
+    try {
+      const aiResponse = await axios.post(
+        `${FASTAPI_URL}/analyze-resume-file`,
+        formData,
+        { headers: formData.getHeaders(), timeout: 60000 }
+      );
 
-        try {
-          //  Save skills to MongoDB
-          await Skill.create({
-            user: req.user._id,
-            source: "resume",
-            sourceRef: resume._id.toString(), // Correct reference
-            skills: Array.isArray(extractedSkills)
-              ? extractedSkills
-              : [extractedSkills],
-          });
-        } catch (skillSaveErr) {
-          console.error("Failed to save extracted skills to DB:", skillSaveErr);
-          // Still return success for upload, but mark extraction error
-          return res.status(200).json({
-            message: "Resume uploaded, skill save failed. Check logs.",
-            resume,
-            extractedSkills,
-            extractionError: true,
-          });
-        }
-
-        return res.status(200).json({
-          message: "Resume uploaded and skills extracted",
-          resume,
-          extractedSkills,
-          extractionError: false,
-        });
+      if (aiResponse?.data) {
+        const { existing_skills, suggested_skills } = aiResponse.data;
+        extractedSkills = [
+          ...(existing_skills || []),
+          ...(suggested_skills || []),
+        ];
       }
-    );
+    } catch (apiErr) {
+      console.error("FastAPI extraction failed:", apiErr.message);
+      extractionError = true;
+    }
+
+    try {
+      //  Save skills to MongoDB
+      await Skill.create({
+        user: req.user._id,
+        source: "resume",
+        sourceRef: resume._id.toString(), // Correct reference
+        skills: Array.isArray(extractedSkills)
+          ? extractedSkills
+          : [extractedSkills],
+      });
+    } catch (skillSaveErr) {
+      console.error("Failed to save extracted skills to DB:", skillSaveErr);
+      // Still return success for upload, but mark extraction error
+      // extractionError: true;
+    }
+
+    return res.status(200).json({
+      message: extractionError
+        ? "Resume uploaded, but extraction failed or incomplete."
+        : "Resume uploaded and skills extracted successfully.",
+      resume,
+      extractedSkills,
+      extractionError: false,
+    });
   } catch (error) {
     console.error("Resume upload error:", error);
     res.status(500).json({ message: "Server error" });
