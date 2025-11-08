@@ -8,17 +8,20 @@ import re
 
 load_dotenv()
 # co = cohere.Client(os.getenv("COHERE_API_KEY"))
-co = co = cohere.ClientV2(api_key=os.getenv("COHERE_API_KEY"))
+co = cohere.ClientV2(api_key=os.getenv("COHERE_API_KEY"))
 
 def suggest_additional_skills_from_resume(resume_text: str, job_description: str = "") -> dict:
+    resume_block = f'"""\n{resume_text}\n"""'
+    job_part = ""
+    if job_description:
+        job_part = f'\nAnd the following JOB DESCRIPTION:\n"""\n{job_description}\n"""'
+
     prompt = f"""
 You are an AI resume analysis assistant.
 
 Given the following RESUME TEXT:
-\"\"\"{resume_text}\"\"\"
-
-{("And the following JOB DESCRIPTION:\n\"\"\"" + job_description + "\"\"\"" if job_description else "")}
-
+{resume_block}
+{job_part}
 1. Extract all technical, soft, and professional skills mentioned in the resume.
 2. Suggest 5 additional high-demand skills (technical or soft) that would strengthen the resume { "for the job described" if job_description else "" }.
 
