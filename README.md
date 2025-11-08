@@ -16,6 +16,16 @@
 
 ---
 
+### 🌐 **Live Deployments**
+
+| Service         | URL                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| Frontend        | [https://myresumechecker.onrender.com](https://myresumechecker.onrender.com)                             |
+| FastAPI Backend | [https://myresumecheckerfastapibackend.onrender.com](https://myresumecheckerfastapibackend.onrender.com) |
+| Node Service    | [https://myresumechecker-node-service.onrender.com](https://myresumechecker-node-service.onrender.com)   |
+
+---
+
 ### **🏠 [Project Homepage](https://github.com/anjalicp22/MyResumeChecker)**
 
 ---
@@ -62,6 +72,32 @@ npm start
 # Backend (Python - pytest)
 pytest
 ```
+
+---
+
+## 🚀 **Continuous Integration & Deployment (CI/CD)**
+
+This project uses **GitHub Actions** for automated testing and **Render** for continuous deployment, ensuring code quality and uptime.
+
+### 🔧 CI/CD Overview
+
+- **Continuous Integration**
+
+  - Automatically runs tests for:
+    - `ai_service` (FastAPI backend with pytest)
+    - `server` (Node.js service)
+    - `client` (React frontend)
+  - Enforces branch protection — all checks must pass before merging into `main`.
+
+- **Continuous Deployment**
+  - Each successful push to `main` triggers Render deploy hooks:
+    - FastAPI backend → Render
+    - Node server → Render
+    - React frontend → Render
+  - All environment variables and secrets (e.g., `MONGO_URI`, deploy tokens) are securely managed via **GitHub Secrets**.
+
+📂 **Workflow File:** `.github/workflows/ci.yml`  
+Contains build, test, and deploy automation steps for the entire stack.
 
 ---
 
