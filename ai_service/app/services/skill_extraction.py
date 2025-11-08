@@ -17,7 +17,7 @@ You are an AI resume analysis assistant.
 Given the following RESUME TEXT:
 \"\"\"{resume_text}\"\"\"
 
-{f"And the following JOB DESCRIPTION:\n\"\"\"{job_description}\"\"\"" if job_description else ""}
+{("And the following JOB DESCRIPTION:\n\"\"\"" + job_description + "\"\"\"" if job_description else "")}
 
 1. Extract all technical, soft, and professional skills mentioned in the resume.
 2. Suggest 5 additional high-demand skills (technical or soft) that would strengthen the resume { "for the job described" if job_description else "" }.
