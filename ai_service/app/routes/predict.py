@@ -15,4 +15,6 @@ async def predict_skills(req: PredictRequest):
         res = generate_skill_suggestions(req.resume_text, req.job_description)
         return {"suggested_skills": res}
     except Exception as e:
+        import traceback
+        print("🔥 ERROR in /predict-skills route:", traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))

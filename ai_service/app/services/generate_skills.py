@@ -10,7 +10,8 @@ from ..rag.prompt_templates import skill_prompt
 from dotenv import load_dotenv
 
 load_dotenv()
-co = cohere.Client(os.getenv("COHERE_API_KEY"))
+# co = cohere.Client(os.getenv("COHERE_API_KEY"))
+co = cohere.ClientV2(api_key=os.getenv("COHERE_API_KEY"))
 
 def generate_skill_suggestions(resume_text: str, job_description: str) -> list:
     jd_chunks = chunk_text(job_description)
@@ -18,14 +19,21 @@ def generate_skill_suggestions(resume_text: str, job_description: str) -> list:
     context = "\n".join(retrieve_relevant_chunks(resume_emb, jd_chunks))
     prompt = skill_prompt(resume_text, context)
 
-    resp = co.generate(
-        model="command-r-plus",
-        prompt=prompt,
-        max_tokens=200,
+    # resp = co.generate(
+    #     model="command-r-plus",
+    #     prompt=prompt,
+    #     max_tokens=200,
+    #     temperature=0.5
+    # )
+    resp = co.chat(
+        model="command-r-plus-08-2024",  # latest version of same model
+        messages=[{"role": "user", "content": prompt}],
         temperature=0.5
     )
 
-    lines = [line.strip("-\u2022 ") for line in resp.generations[0].text.strip().splitlines() if line.strip()]
+    raw_text = resp.message.content[0].text.strip()
+    # lines = [line.strip("-\u2022 ") for line in resp.generations[0].text.strip().splitlines() if line.strip()]
+    lines = [line.strip("-\u2022 ") for line in raw_text.splitlines() if line.strip()]
     lines = list(set(lines))
 
     print(" Missing Skills Suggested by AI:", lines)
