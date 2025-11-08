@@ -21,6 +21,8 @@ jobs:
           - 27017:27017
     env:
       MONGO_URI: ${{ secrets.MONGO_URI }}
+      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
