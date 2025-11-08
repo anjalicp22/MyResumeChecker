@@ -1,0 +1,96 @@
+name: CI/CD Pipeline (React + FastAPI + Node + Render)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # --------------- FASTAPI TESTS ---------------
+  backend-tests:
+    name: Test FastAPI (ai_service)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai_service
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run FastAPI tests
+        run: pytest -v
+
+  # --------------- NODE TESTS ---------------
+  node-tests:
+    name: Test Node (server)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test --if-present
+
+  # --------------- FRONTEND BUILD ---------------
+  frontend-build:
+    name: Build React (client)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build React app
+        run: npm run build
+
+  # --------------- DEPLOY TO RENDER ---------------
+  deploy:
+    name: Deploy All Services
+    runs-on: ubuntu-latest
+    needs: [backend-tests, node-tests, frontend-build]
+    steps:
+      - name: Trigger Render Backend Deploy
+        run: curl -X POST ${{ secrets.RENDER_BACKEND_HOOK }}
+
+      - name: Trigger Render Node Deploy
+        run: curl -X POST ${{ secrets.RENDER_NODE_HOOK }}
+
+      - name: Trigger Render Frontend Deploy
+        run: curl -X POST ${{ secrets.RENDER_FRONTEND_HOOK }}
